@@ -1,0 +1,33 @@
+{
+  "root": true,
+  "env": {
+    "node": true,
+    "es2022": true
+  },
+  "extends": [
+    "eslint:recommended",
+    "plugin:node/recommended",
+    "prettier"
+  ],
+  "parserOptions": {
+    "ecmaVersion": "latest"
+  },
+  "rules": {
+    "eqeqeq": 1,
+    "no-var": 2,
+    "no-console": 0,
+    "require-await": 1,
+    "no-unused-vars": 1,
+    "no-inline-comments": 0,
+    "import/no-unresolved": 1,
+    "no-duplicate-imports": 1,
+    "array-callback-return": 0,
+    "react-hooks/exhaustive-deps": 0,
+    "testing-library/no-unnecessary-act": [
+      0,
+      {
+        "isStrict": true
+      }
+    ]
+  }
+}
