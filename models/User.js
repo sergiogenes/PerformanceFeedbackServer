@@ -13,25 +13,33 @@ class User extends S.Model {
     );
   }
 
-  static findByLegajo(legajo) {
-    return User.findOne({ where: { legajo } });
+  static findByEmail(email) {
+    return User.findOne({ where: { email } });
+  }
+
+  static findByFilenumber(filenumber) {
+    return User.findOne({ where: { filenumber } });
   }
 }
 
 User.init(
   {
-    nombre: {
+    name: {
       type: S.STRING,
       allowNull: false,
     },
-    apellido: {
+    lastname: {
       type: S.STRING,
       allowNull: false,
     },
-    imagen: {
+    email: {
+      type: S.STRING,
+      allowNull: false,
+    },
+    image: {
       type: S.STRING,
     },
-    legajo: {
+    filenumber: {
       type: S.STRING,
       allowNull: false,
       unique: true,
@@ -49,6 +57,10 @@ User.init(
       type: S.BOOLEAN,
       defaultValue: false,
     },
+    isActive: {
+      type: S.BOOLEAN,
+      defaultValue: true,
+    },
     turno: {
       type: S.ENUM("mañana", "tarde", "noche"),
     },
@@ -57,7 +69,7 @@ User.init(
 );
 
 User.addHook("beforeCreate", (user) => {
-  user.password = user.legajo;
+  user.password = user.filenumber;
   const salt = bcrypt.genSaltSync(9);
   user.salt = salt;
 
