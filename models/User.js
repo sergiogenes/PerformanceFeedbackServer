@@ -1,6 +1,6 @@
 const S = require("sequelize");
 const db = require("../db/index");
-const bcrypt = require("bcryptjs");
+const bcrypt = require("bcrypt");
 
 class User extends S.Model {
   hash(password, salt) {
@@ -17,18 +17,18 @@ class User extends S.Model {
     return User.findOne({ where: { email } });
   }
 
-  static findByFilenumber(filenumber) {
-    return User.findOne({ where: { filenumber } });
+  static findByFileNumber(fileNumber) {
+    return User.findOne({ where: { fileNumber } });
   }
 }
 
 User.init(
   {
-    name: {
+    firstName: {
       type: S.STRING,
       allowNull: false,
     },
-    lastname: {
+    lastName: {
       type: S.STRING,
       allowNull: false,
     },
@@ -39,7 +39,7 @@ User.init(
     image: {
       type: S.STRING,
     },
-    filenumber: {
+    fileNumber: {
       type: S.STRING,
       allowNull: false,
       unique: true,
@@ -69,7 +69,7 @@ User.init(
 );
 
 User.addHook("beforeCreate", (user) => {
-  user.password = user.filenumber;
+  user.password = user.fileNumber;
   const salt = bcrypt.genSaltSync(9);
   user.salt = salt;
 
