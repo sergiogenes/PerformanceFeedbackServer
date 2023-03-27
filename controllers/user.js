@@ -25,4 +25,5 @@ const oneUser = async (req, res, next) => {
   return res.send(user)
 }
 
+
 module.exports = { allUser, oneUser }
