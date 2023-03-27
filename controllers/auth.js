@@ -19,7 +19,6 @@ const userLogin = async (req, res, next) => {
     }
 
     token = generateToken(payload)
-    console.log(token);
   } catch (error) {
     return res.send(console.error(error)).status(400)
   }
