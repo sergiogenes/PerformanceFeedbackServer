@@ -18,8 +18,6 @@ const userLogin = async (req, res, next) => {
       isAdmin: user.isAdmin,
     };
 
-    console.log(payload);
-
     token = generateToken(payload);
 
   } catch (error) {
