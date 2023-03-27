@@ -7,7 +7,7 @@ require('dotenv').config()
 const db = require('./db')
 const models = require('./models')
 const routes = require('./routes')
-//const moment = require("./moment")
+// const moment = require('./moment')
 
 const app = express()
 const PORT = process.env.PORT || 3001
@@ -15,7 +15,12 @@ const PORT = process.env.PORT || 3001
 app.use(volleyball)
 app.use(express.json())
 app.use(cookieParser())
-app.use(cors())
+app.use(
+  cors({
+    credentials: true,
+    origin: true,
+  })
+)
 app.use('/', routes)
 
 app.use('/api', (req, res) => res.sendStatus(404))
