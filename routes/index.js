@@ -5,6 +5,6 @@ const userRouter = require('./user')
 const router = express.Router()
 
 router.use('/auth', authRouter)
-router.user('/user', userRouter)
+router.use('/user', userRouter)
 
 module.exports = router
