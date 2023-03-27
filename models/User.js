@@ -1,24 +1,22 @@
-const S = require("sequelize");
-const db = require("../db/index");
-const bcrypt = require("bcrypt");
+const S = require('sequelize')
+const db = require('../db/index')
+const bcrypt = require('bcrypt')
 
 class User extends S.Model {
   hash(password, salt) {
-    return bcrypt.hash(password, salt);
+    return bcrypt.hash(password, salt)
   }
 
   validatePassword(password) {
-    return this.hash(password, this.salt).then(
-      (hash) => hash === this.password
-    );
+    return this.hash(password, this.salt).then(hash => hash === this.password)
   }
 
   static findByEmail(email) {
-    return User.findOne({ where: { email } });
+    return User.findOne({ where: { email } })
   }
 
   static findByFileNumber(fileNumber) {
-    return User.findOne({ where: { fileNumber } });
+    return User.findOne({ where: { fileNumber } })
   }
 }
 
@@ -61,28 +59,28 @@ User.init(
       type: S.DATE,
     },
     shift: {
-      type: S.ENUM("morning", "afternoon", "nigth"),
+      type: S.ENUM('morning', 'afternoon', 'nigth'),
     },
   },
-  { sequelize: db, modelName: "user", timestamps: false }
-);
+  { sequelize: db, modelName: 'user', timestamps: false }
+)
 
-User.addHook("beforeCreate", (user) => {
+User.addHook('beforeCreate', user => {
   //user.password = user.fileNumber;
-  const salt = bcrypt.genSaltSync(9);
-  user.salt = salt;
+  const salt = bcrypt.genSaltSync(9)
+  user.salt = salt
 
-  return user.hash(user.password, user.salt).then((hash) => {
-    user.password = hash;
-  });
-});
+  return user.hash(user.password, user.salt).then(hash => {
+    user.password = hash
+  })
+})
 
-User.beforeUpdate((user) => {
-  const salt = bcrypt.genSaltSync(9);
-  user.salt = salt;
-  return user.hash(user.password, user.salt).then((hash) => {
-    user.password = hash;
-  });
-});
+User.beforeUpdate(user => {
+  const salt = bcrypt.genSaltSync(9)
+  user.salt = salt
+  return user.hash(user.password, user.salt).then(hash => {
+    user.password = hash
+  })
+})
 
-module.exports = User;
+module.exports = User
