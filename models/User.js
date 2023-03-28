@@ -55,7 +55,7 @@ User.init(
       type: S.BOOLEAN,
       defaultValue: false,
     },
-    desactivated_at: {
+    deactivated_at: {
       type: S.DATE,
     },
     shift: {

@@ -4,15 +4,15 @@ const {
   allUser,
   oneUser,
   modifyUser,
-  includeDesactivated,
-  desactivateUser,
+  includeDeactivated,
+  deactivateUser,
 } = require('../controllers/user')
 const validateAuth = require('../middlewares/validate')
 
 router.get('/', validateAuth, allUser)
-router.get('/all', validateAuth, includeDesactivated) //include desactivated users
+router.get('/all', validateAuth, includeDeactivated) //include deactivated users
 router.get('/:id', validateAuth, oneUser)
-router.put('/desactivate/:id', validateAuth, desactivateUser)
+router.put('/desactivate/:id', validateAuth, deactivateUser)
 router.put('/:id', validateAuth, modifyUser)
 
 module.exports = router
