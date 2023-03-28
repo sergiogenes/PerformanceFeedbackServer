@@ -6,6 +6,9 @@ const Team = require('./Team')
 User.hasMany(User, { as: 'employee' })
 User.belongsTo(User, { as: 'leader' })
 
+Position.hasMany(User, { foreignKey: 'positionId' })
+User.belongsTo(Position, { foreignKey: 'positionId' })
+
 Country.hasMany(Office)
 Office.belongsTo(Country)
 
