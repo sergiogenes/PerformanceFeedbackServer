@@ -13,10 +13,14 @@ const userLogin = async (req, res, next) => {
 
     payload = {
       id: user.id,
-      fileNumber: user.fileNumber,
       firstName: user.firstName,
       lastName: user.lastName,
+      email: user.email,
+      image: user.image,
+      fileNumber: user.fileNumber,
       isAdmin: user.isAdmin,
+      deactivated_at: user.deactivated_at,
+      shift: user.shift,
     }
 
     token = generateToken(payload)
@@ -32,4 +36,8 @@ const userLogout = (req, res) => {
   res.status(200).send({})
 }
 
-module.exports = { userLogin, userLogout }
+const userMe = (req, res, next) => {
+  res.send(req.user)
+}
+
+module.exports = { userLogin, userLogout, userMe }

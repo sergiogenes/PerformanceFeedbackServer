@@ -7,7 +7,7 @@ require('dotenv').config()
 const db = require('./db')
 const models = require('./models')
 const routes = require('./routes')
-const moment = require('./moment')
+//const moment = require('./moment')
 
 const app = express()
 const PORT = process.env.PORT || 3001
