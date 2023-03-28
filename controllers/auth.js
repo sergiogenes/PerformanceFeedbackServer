@@ -13,10 +13,14 @@ const userLogin = async (req, res, next) => {
 
     payload = {
       id: user.id,
-      fileNumber: user.fileNumber,
       firstName: user.firstName,
       lastName: user.lastName,
+      email: user.email,
+      image: user.image,
+      fileNumber: user.fileNumber,
       isAdmin: user.isAdmin,
+      deactivated_at: user.deactivated_at,
+      shift: user.shift,
     }
 
     token = generateToken(payload)
@@ -24,8 +28,16 @@ const userLogin = async (req, res, next) => {
     return res.send(console.error(error)).status(400)
   }
 
-
   return res.cookie('token', token).send(token)
 }
 
-module.exports = { userLogin }
+const userLogout = (req, res) => {
+  res.clearCookie('token')
+  res.status(200).send({})
+}
+
+const userMe = (req, res, next) => {
+  res.send(req.user)
+}
+
+module.exports = { userLogin, userLogout, userMe }

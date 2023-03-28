@@ -1,4 +1,5 @@
-const { timeStamp } = require('console')
+const { ValidationError } = require('sequelize')
+
 const User = require('../models/User')
 
 const allUser = async (req, res, next) => {
@@ -38,6 +39,16 @@ const oneUser = async (req, res, next) => {
   return res.send(user)
 }
 
+const createUser = async (req, res, next) => {
+  try {
+    const addedUser = await User.create(req.body)
+    res.status(201).send(addedUser)
+  } catch (error) {
+    if (error instanceof ValidationError) error.status = 422
+    next(error)
+  }
+}
+
 const modifyUser = async (req, res, next) => {
   const { firstName, lastName, shift, password, team, office, category } =
     req.body
@@ -75,6 +86,7 @@ module.exports = {
   allUser,
   oneUser,
   modifyUser,
+  createUser,
   includeDeactivated,
   deactivateUser,
 }
