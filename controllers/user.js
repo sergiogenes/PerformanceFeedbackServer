@@ -1,4 +1,3 @@
-const { timeStamp } = require('console')
 const User = require('../models/User')
 
 const allUser = async (req, res, next) => {
