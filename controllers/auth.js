@@ -28,7 +28,7 @@ const userLogin = async (req, res, next) => {
     return res.send(console.error(error)).status(400)
   }
 
-  return res.cookie('token', token).send(token)
+  return res.cookie('token', token).send({ ...payload })
 }
 
 const userLogout = (req, res) => {
