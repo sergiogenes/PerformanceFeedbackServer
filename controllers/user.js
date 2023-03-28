@@ -79,7 +79,7 @@ const deactivateUser = async (req, res, next) => {
     return res.send(console.error(error)).status(400)
   }
 
-  return res.send(user)
+  return res.sendStatus(204)
 }
 
 module.exports = {
