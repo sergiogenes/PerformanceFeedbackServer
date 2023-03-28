@@ -6,6 +6,18 @@ const allUser = async (req, res, next) => {
   let user
 
   try {
+    user = await User.findAll({ where: { deactivated_at: null } })
+  } catch (error) {
+    return res.send(console.error(error)).status(400)
+  }
+
+  return res.send(user)
+}
+
+const includeDeactivated = async (req, res, next) => {
+  let user
+
+  try {
     user = await User.findAll()
   } catch (error) {
     return res.send(console.error(error)).status(400)
@@ -38,13 +50,13 @@ const createUser = async (req, res, next) => {
 }
 
 const modifyUser = async (req, res, next) => {
-  const { firstName, lastName, shift, password, team, oficce, category } =
+  const { firstName, lastName, shift, password, team, office, category } =
     req.body
   let user
 
   try {
     user = await User.update(
-      { firstName, lastName, shift, password, team, oficce, category },
+      { firstName, lastName, shift, password, team, office, category },
       { where: { id: req.params.id }, returning: true, individualHooks: true }
     )
   } catch (error) {
@@ -54,4 +66,27 @@ const modifyUser = async (req, res, next) => {
   return res.send(user)
 }
 
-module.exports = { allUser, oneUser, createUser, modifyUser }
+const deactivateUser = async (req, res, next) => {
+  let user
+  let timestamp = Date.now()
+
+  try {
+    user = await User.update(
+      { deactivated_at: new Date() },
+      { where: { id: req.params.id }, returning: true, individualHooks: true }
+    )
+  } catch (error) {
+    return res.send(console.error(error)).status(400)
+  }
+
+  return res.send(user)
+}
+
+module.exports = {
+  allUser,
+  oneUser,
+  modifyUser,
+  createUser,
+  includeDeactivated,
+  deactivateUser,
+}
