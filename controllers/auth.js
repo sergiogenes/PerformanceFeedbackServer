@@ -20,13 +20,16 @@ const userLogin = async (req, res, next) => {
     }
 
     token = generateToken(payload)
-    
   } catch (error) {
     return res.send(console.error(error)).status(400)
   }
 
-
   return res.cookie('token', token).send(token)
 }
 
-module.exports = { userLogin }
+const userLogout = (req, res) => {
+  res.clearCookie('token')
+  res.status(200).send({})
+}
+
+module.exports = { userLogin, userLogout }
