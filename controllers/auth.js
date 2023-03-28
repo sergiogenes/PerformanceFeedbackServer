@@ -12,6 +12,7 @@ const userLogin = async (req, res, next) => {
     if (!validation) return res.status(401).send('Error de validación')
 
     payload = {
+      id: user.id,
       fileNumber: user.fileNumber,
       firstName: user.firstName,
       lastName: user.lastName,
@@ -23,7 +24,8 @@ const userLogin = async (req, res, next) => {
     return res.send(console.error(error)).status(400)
   }
 
-  return res.cookie('token', token).send(user)
+
+  return res.cookie('token', token).send(token)
 }
 
 module.exports = { userLogin }
