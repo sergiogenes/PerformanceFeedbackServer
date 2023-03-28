@@ -25,14 +25,24 @@ User.init(
     firstName: {
       type: S.STRING,
       allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
     },
     lastName: {
       type: S.STRING,
       allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
     },
     email: {
       type: S.STRING,
+      unique: true,
       allowNull: false,
+      validate: {
+        isEmail: true,
+      },
     },
     image: {
       type: S.STRING,
@@ -45,7 +55,13 @@ User.init(
     password: {
       type: S.STRING,
       validate: {
-        len: [4, 32],
+        isStrongPassword: {
+          minLength: 8,
+          minLowercase: 0,
+          minUppercase: 0,
+          minNumbers: 0,
+          minSymbols: 0,
+        },
       },
     },
     salt: {
