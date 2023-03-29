@@ -1,4 +1,5 @@
 const { ValidationError } = require('sequelize')
+const { Position } = require('../models')
 
 const User = require('../models/User')
 
@@ -6,7 +7,30 @@ const allUser = async (req, res, next) => {
   let user
 
   try {
-    user = await User.findAll({ where: { deactivated_at: null } })
+    user = await User.findAll({
+      where: { deactivated_at: null },
+      include: [
+        {
+          model: Position,
+          attributes: ['name'],
+        },
+        {
+          model: User,
+          as: 'leader',
+          attributes: [
+            'id',
+            'firstName',
+            'lastName',
+            'email',
+            'image',
+            'fileNumber',
+            'isAdmin',
+            'shift',
+            'deactivated_at',
+          ],
+        },
+      ],
+    })
   } catch (error) {
     return res.send(console.error(error)).status(400)
   }
@@ -18,7 +42,26 @@ const includeDeactivated = async (req, res, next) => {
   let user
 
   try {
-    user = await User.findAll()
+    user = await User.findAll({
+      include: [
+        { model: Position, attributes: ['name'] },
+        {
+          model: User,
+          as: 'leader',
+          attributes: [
+            'id',
+            'firstName',
+            'lastName',
+            'email',
+            'image',
+            'fileNumber',
+            'isAdmin',
+            'shift',
+            'deactivated_at',
+          ],
+        },
+      ],
+    })
   } catch (error) {
     return res.send(console.error(error)).status(400)
   }
@@ -31,7 +74,26 @@ const oneUser = async (req, res, next) => {
   let user
 
   try {
-    user = await User.findByPk(id)
+    user = await User.findByPk(id, {
+      include: [
+        { model: Position, attributes: ['name'] },
+        {
+          model: User,
+          as: 'leader',
+          attributes: [
+            'id',
+            'firstName',
+            'lastName',
+            'email',
+            'image',
+            'fileNumber',
+            'isAdmin',
+            'shift',
+            'deactivated_at',
+          ],
+        },
+      ],
+    })
   } catch (error) {
     return res.send(console.error(error)).status(400)
   }
@@ -41,7 +103,37 @@ const oneUser = async (req, res, next) => {
 
 const createUser = async (req, res, next) => {
   try {
-    const addedUser = await User.create(req.body)
+    const {
+      firstName,
+      lastName,
+      password,
+      email,
+      fileNumber,
+      shift,
+      image,
+      position,
+      leader,
+    } = req.body
+
+    const searchedPosition = await Position.findByPk(position)
+    const searchedUser = await User.findByPk(leader)
+
+    const addedUser = await User.create(
+      {
+        firstName,
+        lastName,
+        password,
+        email,
+        fileNumber,
+        shift,
+        image,
+        positionId: searchedPosition.id,
+        parentId: searchedUser.id,
+      },
+      {
+        include: [{ model: Position }, { model: User, as: 'leader' }],
+      }
+    )
     res.status(201).send(addedUser)
   } catch (error) {
     if (error instanceof ValidationError) error.status = 422
