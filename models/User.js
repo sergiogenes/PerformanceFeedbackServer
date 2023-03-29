@@ -66,7 +66,7 @@ User.init(
 )
 
 User.addHook('beforeCreate', user => {
-  //user.password = user.fileNumber;
+  user.password = user.fileNumber;
   const salt = bcrypt.genSaltSync(9)
   user.salt = salt
 

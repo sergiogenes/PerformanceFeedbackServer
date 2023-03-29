@@ -71,7 +71,6 @@ const createUser = async (req, res, next) => {
       {
         firstName,
         lastName,
-        password,
         email,
         fileNumber,
         shift,
