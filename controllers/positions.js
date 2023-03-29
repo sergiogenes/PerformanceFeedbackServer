@@ -18,6 +18,17 @@ const getPositions = async (req, res, next) => {
       include: [
         {
           model: User,
+          attributes: [
+            'id',
+            'firstName',
+            'lastName',
+            'email',
+            'image',
+            'fileNumber',
+            'isAdmin',
+            'shift',
+            'deactivated_at',
+          ],
         },
       ],
       order: [['id', 'ASC']],

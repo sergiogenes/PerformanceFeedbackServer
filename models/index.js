@@ -4,8 +4,8 @@ const Office = require('./Office')
 const Team = require('./Team')
 const Position = require('./Position')
 
-User.hasMany(User, { as: 'employee' })
-User.belongsTo(User, { as: 'leader' })
+User.hasMany(User, { as: 'employee', foreignKey: 'parentId' })
+User.belongsTo(User, { as: 'leader', foreignKey: 'parentId' })
 
 Position.hasMany(User, { foreignKey: 'positionId' })
 User.belongsTo(Position, { foreignKey: 'positionId' })
