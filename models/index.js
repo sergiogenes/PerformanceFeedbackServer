@@ -1,22 +1,59 @@
-const User = require('./User')
-const Country = require('./Country')
-const Office = require('./Office')
-const Team = require('./Team')
-const Position = require('./Position')
+'use strict'
 
-User.hasMany(User, { as: 'employee', foreignKey: 'parentId' })
-User.belongsTo(User, { as: 'leader', foreignKey: 'parentId' })
+const fs = require('fs')
+const path = require('path')
+const Sequelize = require('sequelize')
+const process = require('process')
+const basename = path.basename(__filename)
+const env = process.env.NODE_ENV || 'development'
+// eslint-disable-next-line
+const config = require(__dirname + '/../resources/db/config.js')[env]
+const db = {}
 
-Position.hasMany(User, { foreignKey: 'positionId' })
-User.belongsTo(Position, { foreignKey: 'positionId' })
+let sequelize
+if (config.use_env_variable) {
+  sequelize = new Sequelize(process.env[config.use_env_variable], config)
+} else {
+  sequelize = new Sequelize(
+    config.database,
+    config.username,
+    config.password,
+    config
+  )
+}
 
-Country.hasMany(Office)
-Office.belongsTo(Country)
+// eslint-disable-next-line
+Object.defineProperty(String.prototype, 'capitalize', {
+  value: function () {
+    return this.charAt(0).toUpperCase() + this.slice(1)
+  },
+  enumerable: false,
+})
 
-Office.hasMany(User)
-User.belongsTo(Office)
+fs.readdirSync(__dirname)
+  .filter(file => {
+    return (
+      file.indexOf('.') !== 0 &&
+      file !== basename &&
+      file.slice(-3) === '.js' &&
+      file.indexOf('.test.js') === -1
+    )
+  })
+  .forEach(file => {
+    const model = require(path.join(__dirname, file))(
+      sequelize,
+      Sequelize.DataTypes
+    )
+    db[model.name.capitalize()] = model
+  })
 
-Team.hasMany(User)
-User.belongsTo(Team)
+Object.keys(db).forEach(modelName => {
+  if (db[modelName].associate) {
+    db[modelName].associate(db)
+  }
+})
 
-module.exports = { User, Position }
+db.sequelize = sequelize
+db.Sequelize = Sequelize
+
+module.exports = db

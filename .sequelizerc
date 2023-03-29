@@ -1,0 +1,10 @@
+const path = require('path')
+
+const prefix = 'resources/'
+
+module.exports = {
+  'config': path.resolve(prefix, 'db', 'config.js'),
+  'models-path': path.resolve('models'),
+  'seeders-path': path.resolve(prefix, 'db', 'seeders'),
+  'migrations-path': path.resolve(prefix, 'db', 'migrations'),
+}

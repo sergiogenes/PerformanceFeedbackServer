@@ -1,7 +1,7 @@
 const { ValidationError } = require('sequelize')
 const { Position } = require('../models')
 
-const User = require('../models/User')
+const { User } = require('../models')
 
 const allUser = async (req, res, next) => {
   let user
@@ -54,33 +54,17 @@ const oneUser = async (req, res, next) => {
 
 const createUser = async (req, res, next) => {
   try {
-    const {
-      firstName,
-      lastName,
-      password,
-      email,
-      fileNumber,
-      shift,
-      image,
-      position,
-    } = req.body
+    const { position, team, ...userFields } = req.body
 
-    const searchedPosition = await Position.findByPk(position)
+    const positionToSet = await Position.findOne({
+      where: { name: position },
+    })
 
-    const addedUser = await User.create(
-      {
-        firstName,
-        lastName,
-        email,
-        fileNumber,
-        shift,
-        image,
-        positionId: searchedPosition.id,
-      },
-      {
-        include: [{ model: Position }],
-      }
-    )
+    const addedUser = await User.create({ ...userFields })
+    addedUser.setPostition(positionToSet)
+    addedUser.setLeader()
+    addedUser.SetLed()
+
     res.status(201).send(addedUser)
   } catch (error) {
     if (error instanceof ValidationError) error.status = 422
@@ -107,7 +91,7 @@ const modifyUser = async (req, res, next) => {
 
 const deactivateUser = async (req, res, next) => {
   let user
-  let timestamp = Date.now()
+  const timestamp = Date.now()
 
   try {
     user = await User.update(

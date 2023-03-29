@@ -10,7 +10,14 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon app.js",
     "start": "node app.js",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "sequelize": "node_modules/.bin/sequelize",
+    "db:create": "sequelize db:create",
+    "db:drop": "sequelize db:drop",
+    "db:migrate": "sequelize db:migrate",
+    "db:migrate:undo": "sequelize db:migrate:undo",
+    "db:seed:all": "sequelize db:seed:all",
+    "db:seed:undo:all": "sequelize db:seed:undo:all"
   },
   "keywords": [],
   "author": "",
@@ -36,7 +43,9 @@
     "husky": "^8.0.0",
     "lint-staged": "^13.2.0",
     "nodemon": "^2.0.21",
-    "prettier": "^2.8.6"
+    "prettier": "^2.8.6",
+    "sequelize-cli": "^6.6.0",
+    "supertest": "^6.3.3"
   },
   "lint-staged": {
     "*.js": "eslint --cache --fix --cache-location ./node_modules/.cache/",
