@@ -14,21 +14,6 @@ const allUser = async (req, res, next) => {
           model: Position,
           attributes: ['name'],
         },
-        {
-          model: User,
-          as: 'leader',
-          attributes: [
-            'id',
-            'firstName',
-            'lastName',
-            'email',
-            'image',
-            'fileNumber',
-            'isAdmin',
-            'shift',
-            'deactivated_at',
-          ],
-        },
       ],
     })
   } catch (error) {
@@ -43,24 +28,7 @@ const includeDeactivated = async (req, res, next) => {
 
   try {
     user = await User.findAll({
-      include: [
-        { model: Position, attributes: ['name'] },
-        {
-          model: User,
-          as: 'leader',
-          attributes: [
-            'id',
-            'firstName',
-            'lastName',
-            'email',
-            'image',
-            'fileNumber',
-            'isAdmin',
-            'shift',
-            'deactivated_at',
-          ],
-        },
-      ],
+      include: [{ model: Position, attributes: ['name'] }],
     })
   } catch (error) {
     return res.send(console.error(error)).status(400)
@@ -75,24 +43,7 @@ const oneUser = async (req, res, next) => {
 
   try {
     user = await User.findByPk(id, {
-      include: [
-        { model: Position, attributes: ['name'] },
-        {
-          model: User,
-          as: 'leader',
-          attributes: [
-            'id',
-            'firstName',
-            'lastName',
-            'email',
-            'image',
-            'fileNumber',
-            'isAdmin',
-            'shift',
-            'deactivated_at',
-          ],
-        },
-      ],
+      include: [{ model: Position, attributes: ['name'] }],
     })
   } catch (error) {
     return res.send(console.error(error)).status(400)
@@ -112,11 +63,9 @@ const createUser = async (req, res, next) => {
       shift,
       image,
       position,
-      leader,
     } = req.body
 
     const searchedPosition = await Position.findByPk(position)
-    const searchedUser = await User.findByPk(leader)
 
     const addedUser = await User.create(
       {
@@ -128,10 +77,9 @@ const createUser = async (req, res, next) => {
         shift,
         image,
         positionId: searchedPosition.id,
-        parentId: searchedUser.id,
       },
       {
-        include: [{ model: Position }, { model: User, as: 'leader' }],
+        include: [{ model: Position }],
       }
     )
     res.status(201).send(addedUser)
