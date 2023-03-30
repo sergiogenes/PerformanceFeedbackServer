@@ -9,8 +9,8 @@ const {
 } = require('../controllers/positions')
 
 router.get('/', getPositions)
-router.post('/create', validatePermissions, createPosition)
-router.put('/update', validatePermissions, updatePosition)
-router.delete('/delete', validatePermissions, deletePosition)
+router.post('/', validatePermissions, createPosition)
+router.put('/', validatePermissions, updatePosition)
+router.delete('/', validatePermissions, deletePosition)
 
 module.exports = router
