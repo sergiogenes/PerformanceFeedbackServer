@@ -11,6 +11,6 @@ const {
 router.get('/', getPositions)
 router.post('/', validatePermissions, createPosition)
 router.put('/', validatePermissions, updatePosition)
-router.delete('/', validatePermissions, deletePosition)
+router.delete('/:id', deletePosition)
 
 module.exports = router

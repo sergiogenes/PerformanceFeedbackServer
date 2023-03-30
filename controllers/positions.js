@@ -91,15 +91,15 @@ const updatePosition = async (req, res, next) => {
 }
 
 const deletePosition = async (req, res, next) => {
-  const { id, name } = req.body
-
-  if (!id || !name) return res.status(400).json({ Error: 'Campos vacios' })
+  const id = req.params.id
+  console.log('body', req.body)
+  if (!id) return res.status(400).json({ Error: 'Campos vacíos' })
 
   try {
-    const position = await Position.destroy({ where: { name, id } })
+    const position = await Position.destroy({ where: { id } })
     position === 0
-      ? res.status(404).json({ Error: 'No se encontro el puesto a eliminar' })
-      : res.status(200).send('Puesto eliminado con existo')
+      ? res.status(404).json({ Error: 'No se encontró el puesto a eliminar' })
+      : res.status(200).send('Puesto eliminado con éxito!')
   } catch (error) {
     return res.send(console.error(error)).status(400)
   }
