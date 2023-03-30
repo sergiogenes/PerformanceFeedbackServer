@@ -63,18 +63,35 @@ module.exports = {
         type: Sequelize.DATE,
       },
       officeId: {
-        // allowNull: false,
         type: Sequelize.SMALLINT,
+        allowNull: false,
+        references: {
+          model: 'offices',
+          key: 'id',
+        },
       },
       teamId: {
         type: Sequelize.SMALLINT,
+        allowNull: false,
+        references: {
+          model: 'teams',
+          key: 'id',
+        },
       },
       positionId: {
-        // allowNull: false,
         type: Sequelize.SMALLINT,
+        allowNull: false,
+        references: {
+          model: 'positions',
+          key: 'id',
+        },
       },
       leaderId: {
-        type: Sequelize.SMALLINT,
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'users',
+          key: 'id',
+        },
       },
     })
   },

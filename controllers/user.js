@@ -61,13 +61,15 @@ const createUser = async (req, res, next) => {
     })
 
     const addedUser = await User.create({ ...userFields })
-    addedUser.setPostition(positionToSet)
-    addedUser.setLeader()
-    addedUser.SetLed()
+    addedUser.setPosition(positionToSet)
+    // TODO
+    // addedUser.setLeader()
+    // addedUser.SetLed()
 
     res.status(201).send(addedUser)
   } catch (error) {
     if (error instanceof ValidationError) error.status = 422
+    console.error(error)
     next(error)
   }
 }

@@ -11,7 +11,7 @@ const {
 const validateAuth = require('../middlewares/validate')
 
 router.get('/', validateAuth, allUser)
-router.get('/all', validateAuth, includeDeactivated) //include deactivated users
+router.get('/all', validateAuth, includeDeactivated)
 router.get('/:id', validateAuth, oneUser)
 router.post('/', validateAuth, createUser)
 router.put('/:id', validateAuth, modifyUser)

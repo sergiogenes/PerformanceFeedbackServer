@@ -6,7 +6,7 @@ require('dotenv').config()
 
 const db = require('./models')
 const routes = require('./routes')
-const fake = require('./fakeuser')
+// const fake = require('./fakeuser')
 
 const app = express()
 const PORT = process.env.PORT || 3001
