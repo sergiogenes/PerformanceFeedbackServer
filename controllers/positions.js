@@ -48,7 +48,7 @@ const getPositions = async (req, res, next) => {
 }
 
 const createPosition = async (req, res, next) => {
-  const name = req.body.name.toLowerCase()
+  const name = req.body.name
   let createdPosition
 
   if (!name) return res.status(400).json({ Error: 'Nombre vacio' })
@@ -69,7 +69,8 @@ const createPosition = async (req, res, next) => {
 }
 
 const updatePosition = async (req, res, next) => {
-  const { name, id } = req.body
+  const { name } = req.body
+  const id = req.params.id
 
   if (!id || !name) return res.status(400).json({ Error: 'Campos vacios' })
 
@@ -92,7 +93,6 @@ const updatePosition = async (req, res, next) => {
 
 const deletePosition = async (req, res, next) => {
   const id = req.params.id
-  console.log('body', req.body)
   if (!id) return res.status(400).json({ Error: 'Campos vacíos' })
 
   try {

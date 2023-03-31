@@ -10,7 +10,7 @@ const {
 
 router.get('/', getPositions)
 router.post('/', validatePermissions, createPosition)
-router.put('/', validatePermissions, updatePosition)
-router.delete('/:id', deletePosition)
+router.put('/:id', validatePermissions, updatePosition)
+router.delete('/:id', validatePermissions, deletePosition)
 
 module.exports = router
