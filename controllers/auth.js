@@ -1,4 +1,4 @@
-const User = require('../models/User')
+const { User } = require('../models')
 const { generateToken } = require('../utils/token')
 
 const userLogin = async (req, res, next) => {
@@ -7,6 +7,7 @@ const userLogin = async (req, res, next) => {
 
   try {
     user = await User.findOne({ where: { email } })
+    console.log(user)
     validation = await user.validatePassword(password)
 
     if (!validation) return res.status(401).send('Error de validación')

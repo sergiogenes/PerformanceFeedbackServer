@@ -1,6 +1,6 @@
-const User = require('./models/User')
+const { User } = require('./models')
 
-User.truncate({ cascade: true, restartIdentity: true })
+// User.truncate({ cascade: true, restartIdentity: true })
 
 const fakeDataUsers = [
   {

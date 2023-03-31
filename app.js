@@ -4,10 +4,9 @@ const cookieParser = require('cookie-parser')
 const cors = require('cors')
 require('dotenv').config()
 
-const db = require('./db')
-const models = require('./models')
+const db = require('./models')
 const routes = require('./routes')
-//const fake = require('./fakeuser')
+// const fake = require('./fakeuser')
 
 const app = express()
 const PORT = process.env.PORT || 3001
@@ -18,7 +17,7 @@ app.use(cookieParser())
 app.use(
   cors({
     credentials: true,
-    origin: true,
+    origin: 'http://localhost:3000',
   })
 )
 app.use('/', routes)
@@ -32,7 +31,7 @@ app.use((err, req, res, next) => {
   res.send(err)
 })
 
-db.sync({ force: false }).then(() => {
+db.sequelize.sync({ force: false }).then(() => {
   console.log('Db connected')
   app.listen(PORT, () => {
     console.log(`Server listening at port ${PORT}`)
