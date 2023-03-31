@@ -8,7 +8,7 @@ module.exports = {
     const date = new Date()
     const salt = bcrypt.genSaltSync(9)
     await queryInterface.bulkInsert(
-      'users',
+      'Users',
       [
         {
           isAdmin: true,
@@ -60,6 +60,6 @@ module.exports = {
   },
 
   async down(queryInterface, Sequelize) {
-    await queryInterface.bulkDelete('users', null, {})
+    await queryInterface.bulkDelete('Users', null, {})
   },
 }

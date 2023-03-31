@@ -75,21 +75,23 @@ const createUser = async (req, res, next) => {
 }
 
 const modifyUser = async (req, res, next) => {
-  const {
-    firstName,
-    lastName,
-    email,
-    fileNumber,
-    position: positionId,
-    shift,
-  } = req.body
+  const { firstName, lastName, email, fileNumber, position, shift } = req.body
   let user
 
   try {
-    user = await User.update(
-      { firstName, lastName, email, fileNumber, positionId, shift },
-      { where: { id: req.params.id }, returning: true, individualHooks: true }
-    )
+    user = await User.findByPk(req.params.id)
+    user.firstName ||= firstName
+    user.lastName ||= lastName
+    user.email ||= email
+    user.fileNumber ||= fileNumber
+    user.shift ||= shift
+    user.setPosition(position)
+    /* user = await User.update(
+      { firstName, lastName, email, fileNumber, shift, position },
+      { where: { id: req.params.id }, returning: true }
+    ) */
+    user.save()
+    console.log(user)
   } catch (error) {
     return res.send(console.error(error)).status(400)
   }
