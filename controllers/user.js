@@ -75,13 +75,12 @@ const createUser = async (req, res, next) => {
 }
 
 const modifyUser = async (req, res, next) => {
-  const { firstName, lastName, shift, password, team, office, category } =
-    req.body
+  const { firstName, lastName, email, fileNumber, position, shift } = req.body
   let user
 
   try {
     user = await User.update(
-      { firstName, lastName, shift, password, team, office, category },
+      { firstName, lastName, email, fileNumber, position, shift },
       { where: { id: req.params.id }, returning: true, individualHooks: true }
     )
   } catch (error) {
