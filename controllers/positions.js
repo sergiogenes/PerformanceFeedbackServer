@@ -48,7 +48,7 @@ const getPositions = async (req, res, next) => {
 }
 
 const createPosition = async (req, res, next) => {
-  const name = req.body.name.toLowerCase()
+  const name = req.body.name
   let createdPosition
 
   if (!name) return res.status(400).json({ Error: 'Nombre vacio' })
@@ -69,7 +69,8 @@ const createPosition = async (req, res, next) => {
 }
 
 const updatePosition = async (req, res, next) => {
-  const { name, id } = req.body
+  const { name } = req.body
+  const id = req.params.id
 
   if (!id || !name) return res.status(400).json({ Error: 'Campos vacios' })
 
@@ -91,15 +92,14 @@ const updatePosition = async (req, res, next) => {
 }
 
 const deletePosition = async (req, res, next) => {
-  const { id, name } = req.body
-
-  if (!id || !name) return res.status(400).json({ Error: 'Campos vacios' })
+  const id = req.params.id
+  if (!id) return res.status(400).json({ Error: 'Campos vacíos' })
 
   try {
-    const position = await Position.destroy({ where: { name, id } })
+    const position = await Position.destroy({ where: { id } })
     position === 0
-      ? res.status(404).json({ Error: 'No se encontro el puesto a eliminar' })
-      : res.status(200).send('Puesto eliminado con existo')
+      ? res.status(404).json({ Error: 'No se encontró el puesto a eliminar' })
+      : res.status(200).send('Puesto eliminado con éxito!')
   } catch (error) {
     return res.send(console.error(error)).status(400)
   }
