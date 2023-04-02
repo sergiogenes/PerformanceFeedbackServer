@@ -63,7 +63,7 @@ module.exports = {
         type: Sequelize.DATE,
       },
       officeId: {
-        type: Sequelize.SMALLINT,
+        type: Sequelize.INTEGER,
         allowNull: false,
         references: {
           model: 'offices',
@@ -71,7 +71,7 @@ module.exports = {
         },
       },
       teamId: {
-        type: Sequelize.SMALLINT,
+        type: Sequelize.INTEGER,
         allowNull: false,
         references: {
           model: 'teams',
@@ -79,7 +79,7 @@ module.exports = {
         },
       },
       positionId: {
-        type: Sequelize.SMALLINT,
+        type: Sequelize.INTEGER,
         allowNull: false,
         references: {
           model: 'positions',
