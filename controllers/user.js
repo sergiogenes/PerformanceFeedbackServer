@@ -60,11 +60,17 @@ const createUser = async (req, res, next) => {
       where: { name: position },
     })
 
-    const addedUser = await User.create({ ...userFields })
+    // TODO recuperar el teamId
+    // TODO recuperar el officeId
+
+    const addedUser = await User.build({ ...userFields })
     addedUser.setPosition(positionToSet)
+
     // TODO
     // addedUser.setLeader()
     // addedUser.SetLed()
+
+    addedUser.save()
 
     res.status(201).send(addedUser)
   } catch (error) {
