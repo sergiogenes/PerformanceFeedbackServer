@@ -22,14 +22,6 @@ if (config.use_env_variable) {
   )
 }
 
-// eslint-disable-next-line
-Object.defineProperty(String.prototype, 'capitalize', {
-  value: function () {
-    return this.charAt(0).toUpperCase() + this.slice(1)
-  },
-  enumerable: false,
-})
-
 fs.readdirSync(__dirname)
   .filter(file => {
     return (
@@ -44,7 +36,7 @@ fs.readdirSync(__dirname)
       sequelize,
       Sequelize.DataTypes
     )
-    db[model.name.capitalize()] = model
+    db[model.name] = model
   })
 
 Object.keys(db).forEach(modelName => {

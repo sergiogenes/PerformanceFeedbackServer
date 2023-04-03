@@ -8,9 +8,9 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       User.hasMany(models.User, { as: 'led', foreignKey: 'leaderId' })
       User.belongsTo(models.User, { as: 'leader', foreignKey: 'leaderId' })
-      User.belongsTo(models.Position)
-      User.belongsTo(models.Office)
-      User.belongsTo(models.Team)
+      User.belongsTo(models.Position, { foreignKey: 'positionId' })
+      User.belongsTo(models.Office, { foreignKey: 'officeId' })
+      User.belongsTo(models.Team, { foreignKey: 'teamId' })
     }
 
     hash(password, salt) {
@@ -74,7 +74,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: 'user',
+      tableName: 'users',
     }
   )
 

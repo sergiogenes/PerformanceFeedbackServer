@@ -23,7 +23,7 @@ module.exports = {
       },
       countryId: {
         allowNull: false,
-        type: Sequelize.SMALLINT,
+        type: Sequelize.INTEGER,
       },
     })
   },

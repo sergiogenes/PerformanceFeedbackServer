@@ -7,15 +7,20 @@ module.exports = {
     await queryInterface.bulkInsert(
       'positions',
       [
-        { name: 'Gerente General', createdAt: date, updatedAt: date },
-        { name: 'Gerente Regional', createdAt: date, updatedAt: date },
-        { name: 'Country Manager', createdAt: date, updatedAt: date },
-        { name: 'Gerente', createdAt: date, updatedAt: date },
-        { name: 'Jefatura Regional', createdAt: date, updatedAt: date },
-        { name: 'Jefatura', createdAt: date, updatedAt: date },
-        { name: 'Coordinador Regional', createdAt: date, updatedAt: date },
-        { name: 'Coordinador', createdAt: date, updatedAt: date },
-        { name: 'Operador', createdAt: date, updatedAt: date },
+        { id: 1, name: 'Gerente General', createdAt: date, updatedAt: date },
+        { id: 2, name: 'Gerente Regional', createdAt: date, updatedAt: date },
+        { id: 3, name: 'Country Manager', createdAt: date, updatedAt: date },
+        { id: 4, name: 'Gerente', createdAt: date, updatedAt: date },
+        { id: 5, name: 'Jefatura Regional', createdAt: date, updatedAt: date },
+        { id: 6, name: 'Jefatura', createdAt: date, updatedAt: date },
+        {
+          id: 7,
+          name: 'Coordinador Regional',
+          createdAt: date,
+          updatedAt: date,
+        },
+        { id: 8, name: 'Coordinador', createdAt: date, updatedAt: date },
+        { id: 9, name: 'Operador', createdAt: date, updatedAt: date },
       ],
       {}
     )
