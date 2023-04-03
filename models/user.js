@@ -6,6 +6,8 @@ const bcrypt = require('bcrypt')
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     static associate(models) {
+      User.hasMany(models.Indicator, { foreignKey: 'evaluatedId' })
+      User.hasMany(models.Indicator, { foreignKey: 'evaluatorId' })
       User.hasMany(models.User, { as: 'led', foreignKey: 'leaderId' })
       User.belongsTo(models.User, { as: 'leader', foreignKey: 'leaderId' })
       User.belongsTo(models.Position, { foreignKey: 'positionId' })
