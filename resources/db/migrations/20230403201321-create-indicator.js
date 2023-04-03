@@ -27,8 +27,12 @@ module.exports = {
         type: Sequelize.DATE,
       },
       categoryId: {
-        allowNull: false,
         type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'categories',
+          key: 'id',
+        },
       },
     })
   },
