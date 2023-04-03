@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       User.belongsTo(models.Position, { foreignKey: 'positionId' })
       User.belongsTo(models.Office, { foreignKey: 'officeId' })
       User.belongsTo(models.Team, { foreignKey: 'teamId' })
+      User.belongsTo(models.Category, { foreignKey: 'categoryId' })
     }
 
     hash(password, salt) {

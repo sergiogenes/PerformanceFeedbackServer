@@ -86,6 +86,14 @@ module.exports = {
           key: 'id',
         },
       },
+      categoryId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {
+          model: 'categories',
+          key: 'id',
+        },
+      },
       leaderId: {
         type: Sequelize.INTEGER,
         references: {
