@@ -29,6 +29,8 @@ describe('User', () => {
     const response = await request(app)
       .post('/auth/login')
       .send({ email: nonRegisteredEmail, password: administrator.password })
+
+    assert.deepEqual(response.statusCode, 401)
   })
 
   test('Cannot login with wrong password', async () => {
@@ -36,6 +38,8 @@ describe('User', () => {
     const response = await request(app)
       .post('/auth/login')
       .send({ email: administrator.email, password: wrongPassword })
+
+    assert.deepEqual(response.statusCode, 401)
   })
 
   test('Cannot create new users if not an administrator', async () => {

@@ -7,9 +7,11 @@ const userLogin = async (req, res, next) => {
 
   try {
     user = await User.findByEmail(email)
+    if (!user) return res.sendStatus(401)
+
     validation = await user.hasPassword(password)
 
-    if (!validation) return res.status(401).send('Invalid credentials')
+    if (!validation) return res.sendStatus(401)
 
     payload = {
       id: user.id,
