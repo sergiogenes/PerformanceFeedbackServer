@@ -8,7 +8,7 @@ const {
   includeDeactivated,
   deactivateUser,
 } = require('../controllers/user')
-const validateAuth = require('../middlewares/validate')
+const { validateAuth } = require('../middleware/auth')
 
 router.get('/', validateAuth, allUser)
 router.get('/all', validateAuth, includeDeactivated)

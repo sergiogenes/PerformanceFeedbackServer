@@ -8,7 +8,7 @@ const userLogin = async (req, res, next) => {
   try {
     user = await User.findOne({ where: { email } })
     console.log(user)
-    validation = await user.validatePassword(password)
+    validation = await user.hasPassword(password)
 
     if (!validation) return res.status(401).send('Error de validación')
 
