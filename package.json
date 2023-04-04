@@ -7,9 +7,9 @@
     "node": ">=18"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon app.js",
-    "start": "node app.js",
+    "test": "NODE_ENV=test node --test",
+    "start": "node index.js",
+    "start:dev": "nodemon index.js",
     "prepare": "husky install",
     "sequelize": "node_modules/.bin/sequelize",
     "db:create": "sequelize db:create",

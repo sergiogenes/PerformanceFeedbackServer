@@ -5,20 +5,92 @@ const bcrypt = require('bcrypt')
 
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
+    static init() {
+      const schema = {
+        firstName: {
+          type: DataTypes.STRING,
+          allowNull: false,
+          validate: {
+            notEmpty: true,
+          },
+        },
+        lastName: {
+          type: DataTypes.STRING,
+          allowNull: false,
+          validate: {
+            notEmpty: true,
+          },
+        },
+        email: {
+          type: DataTypes.STRING,
+          allowNull: false,
+          validate: {
+            isEmail: true,
+          },
+        },
+        image: {
+          type: DataTypes.STRING,
+        },
+        fileNumber: {
+          type: DataTypes.STRING,
+          allowNull: false,
+          unique: true,
+          validate: {
+            notEmpty: true,
+          },
+        },
+        password: {
+          type: DataTypes.STRING,
+          allowNull: false,
+          validate: {
+            isStrongPassword: {
+              minLength: 8,
+              minLowercase: 0,
+              minUppercase: 0,
+              minNumbers: 0,
+              minSymbols: 0,
+            },
+          },
+        },
+        salt: {
+          type: DataTypes.STRING,
+        },
+        isAdmin: {
+          type: DataTypes.BOOLEAN,
+          defaultValue: false,
+        },
+        deactivated_at: {
+          type: DataTypes.DATE,
+        },
+        shift: {
+          type: DataTypes.ENUM('morning', 'afternoon', 'nigth'),
+          defaultValue: 'morning',
+        },
+      }
+
+      const hooks = {
+        afterValidate: user => {
+          const salt = bcrypt.genSaltSync()
+          user.salt = salt
+          return user.hash(user.password, salt).then(hash => {
+            user.password = hash
+          })
+        },
+      }
+
+      return super.init(schema, {
+        hooks,
+        sequelize,
+        tableName: 'users',
+      })
+    }
+
     static associate(models) {
       User.hasMany(models.User, { as: 'led', foreignKey: 'leaderId' })
       User.belongsTo(models.User, { as: 'leader', foreignKey: 'leaderId' })
       User.belongsTo(models.Position, { foreignKey: 'positionId' })
       User.belongsTo(models.Office, { foreignKey: 'officeId' })
       User.belongsTo(models.Team, { foreignKey: 'teamId' })
-    }
-
-    hash(password, salt) {
-      return bcrypt.hash(password, salt)
-    }
-
-    validatePassword(password) {
-      return this.hash(password, this.salt).then(hash => hash === this.password)
     }
 
     static findByEmail(email) {
@@ -28,72 +100,30 @@ module.exports = (sequelize, DataTypes) => {
     static findByFileNumber(fileNumber) {
       return User.findOne({ where: { fileNumber } })
     }
+
+    hash(password, salt) {
+      return bcrypt.hash(password, salt)
+    }
+
+    hasPassword(stringToValidate) {
+      return this.hash(stringToValidate, this.salt).then(
+        newHash => newHash === this.password
+      )
+    }
+
+    // See nonybrighto's comment in https://stackoverflow.com/a/48357983/8706387
+    toJSON() {
+      const userForClient = this.get({ clone: true })
+      ;['id', 'password', 'salt', 'createdAt', 'updatedAt'].forEach(
+        key => delete userForClient[key]
+      )
+      return userForClient
+    }
   }
 
-  User.init(
-    {
-      firstName: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      lastName: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      email: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      image: {
-        type: DataTypes.STRING,
-      },
-      fileNumber: {
-        type: DataTypes.STRING,
-        allowNull: false,
-        unique: true,
-      },
-      password: {
-        type: DataTypes.STRING,
-        validate: {
-          len: [4, 32],
-        },
-      },
-      salt: {
-        type: DataTypes.STRING,
-      },
-      isAdmin: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
-      },
-      deactivated_at: {
-        type: DataTypes.DATE,
-      },
-      shift: {
-        type: DataTypes.ENUM('morning', 'afternoon', 'nigth'),
-      },
-    },
-    {
-      sequelize,
-      tableName: 'users',
-    }
-  )
-
-  User.addHook('beforeCreate', user => {
-    user.password = user.fileNumber
-    const salt = bcrypt.genSaltSync(9)
-    user.salt = salt
-
-    return user.hash(user.password, user.salt).then(hash => {
-      user.password = hash
-    })
-  })
-
-  User.beforeUpdate(user => {
-    const salt = bcrypt.genSaltSync(9)
-    user.salt = salt
-    return user.hash(user.password, user.salt).then(hash => {
-      user.password = hash
-    })
+  User.init({
+    sequelize,
+    tableName: 'users',
   })
 
   return User

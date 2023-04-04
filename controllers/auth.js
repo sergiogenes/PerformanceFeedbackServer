@@ -6,11 +6,10 @@ const userLogin = async (req, res, next) => {
   let user, validation, payload, token
 
   try {
-    user = await User.findOne({ where: { email } })
-    console.log(user)
+    user = await User.findByEmail(email)
     validation = await user.hasPassword(password)
 
-    if (!validation) return res.status(401).send('Error de validación')
+    if (!validation) return res.status(401).send('Invalid credentials')
 
     payload = {
       id: user.id,
