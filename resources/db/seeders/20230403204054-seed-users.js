@@ -23,6 +23,7 @@ module.exports = {
           createdAt: date,
           positionId: 1,
           officeId: 1,
+          categoryId: 1,
           teamId: 1,
         },
         {
@@ -39,6 +40,7 @@ module.exports = {
           createdAt: date,
           positionId: 2,
           officeId: 1,
+          categoryId: 2,
           teamId: 1,
         },
         {
@@ -56,6 +58,7 @@ module.exports = {
           positionId: 3,
           officeId: 1,
           teamId: 1,
+          categoryId: 3,
           leaderId: 2,
         },
       ],

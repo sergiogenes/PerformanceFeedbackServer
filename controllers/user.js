@@ -63,16 +63,16 @@ const createUser = async (req, res, next) => {
     // TODO recuperar el teamId
     // TODO recuperar el officeId
 
-    const addedUser = await User.build({ ...userFields })
-    addedUser.setPosition(positionToSet)
+    const userToAdd = await User.build({ ...userFields })
+    userToAdd.setPosition(positionToSet)
 
     // TODO
     // addedUser.setLeader()
     // addedUser.SetLed()
 
-    addedUser.save()
+    userToAdd.save()
 
-    res.status(201).send(addedUser)
+    res.status(201).send(userToAdd)
   } catch (error) {
     if (error instanceof ValidationError) error.status = 422
     console.error(error)
