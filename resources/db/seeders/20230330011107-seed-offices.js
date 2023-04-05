@@ -8,7 +8,6 @@ module.exports = {
       'offices',
       [
         {
-          id: 1,
           name: 'Oficina 1',
           countryId: 1,
           createdAt: date,

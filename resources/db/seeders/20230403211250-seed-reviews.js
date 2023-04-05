@@ -8,7 +8,6 @@ module.exports = {
       'reviews',
       [
         {
-          id: 1,
           indicator: 'Indicador 1',
           goal: 45,
           data: 40,
@@ -21,7 +20,6 @@ module.exports = {
           updatedAt: date,
         },
         {
-          id: 2,
           indicator: 'Indicador 2',
           goal: 60,
           data: 70,
