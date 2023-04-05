@@ -69,10 +69,17 @@ module.exports = (sequelize, DataTypes) => {
       }
 
       const hooks = {
-        afterValidate: user => {
+        beforeCreate: user => {
           const salt = bcrypt.genSaltSync()
           user.salt = salt
           return user.hash(user.password, salt).then(hash => {
+            user.password = hash
+          })
+        },
+        beforeUpdate: user => {
+          const salt = bcrypt.genSaltSync(9)
+          user.salt = salt
+          return user.hash(user.password, user.salt).then(hash => {
             user.password = hash
           })
         },

@@ -11,7 +11,33 @@ const allUser = async (req, res, next) => {
       include: [
         {
           model: Position,
-          attributes: ['name'],
+        },
+        {
+          model: User,
+          as: 'leader',
+        },
+      ],
+    })
+  } catch (error) {
+    return res.send(console.error(error)).status(400)
+  }
+
+  return res.send(user)
+}
+
+const allEmpleados = async (req, res, next) => {
+  let user
+
+  try {
+    user = await User.findAll({
+      where: { leaderId: req.params.id },
+      include: [
+        {
+          model: Position,
+        },
+        {
+          model: User,
+          as: 'leader',
         },
       ],
     })
@@ -52,11 +78,13 @@ const oneUser = async (req, res, next) => {
 }
 
 const createUser = async (req, res, next) => {
-  const { position, ...userFields } = req.body
+  const { leader, position, ...userFields } = req.body
   try {
     const positionToSet = await Position.findOne({
       where: { name: position },
     })
+
+    const leaderToSet = await User.findOne({ where: { id: leader } })
 
     // TODO recuperar el teamId
     // TODO recuperar el officeId
@@ -68,10 +96,11 @@ const createUser = async (req, res, next) => {
         ...userFields,
         password: userFields.fileNumber,
       },
-      include: [Position],
+      include: [{ model: Position }, { model: User, as: 'leader' }],
     })
     if (created) {
       await user.setPosition(positionToSet)
+      await user.setLeader(leaderToSet)
     }
 
     res.status(201).send(user)
@@ -110,6 +139,7 @@ const deactivateUser = async (req, res, next) => {
   const timestamp = Date.now()
 
   try {
+    console.log('HOLA')
     user = await User.update(
       { deactivated_at: new Date() },
       { where: { id: req.params.id }, returning: true, individualHooks: true }
@@ -128,4 +158,5 @@ module.exports = {
   createUser,
   includeDeactivated,
   deactivateUser,
+  allEmpleados,
 }
