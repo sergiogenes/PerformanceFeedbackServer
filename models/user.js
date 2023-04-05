@@ -44,7 +44,7 @@ module.exports = (sequelize, DataTypes) => {
           allowNull: false,
           validate: {
             isStrongPassword: {
-              minLength: 8,
+              minLength: 2,
               minLowercase: 0,
               minUppercase: 0,
               minNumbers: 0,

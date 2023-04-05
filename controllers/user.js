@@ -1,6 +1,7 @@
 const { ValidationError } = require('sequelize')
+const { Position } = require('../models')
 
-const { User, Position } = require('../models')
+const { User } = require('../models')
 
 const allUser = async (req, res, next) => {
   let user
@@ -52,8 +53,9 @@ const oneUser = async (req, res, next) => {
 }
 
 const createUser = async (req, res, next) => {
-  const { position, ...userFields } = req.body
   try {
+    const { position, team, ...userFields } = req.body
+
     const positionToSet = await Position.findOne({
       where: { name: position },
     })
@@ -61,20 +63,19 @@ const createUser = async (req, res, next) => {
     // TODO recuperar el teamId
     // TODO recuperar el officeId
 
-    // TODO cambiar por findOrBuild y luego save
-    const [user, created] = await User.findOrCreate({
-      where: { email: userFields.email },
-      defaults: {
-        ...userFields,
-        password: userFields.fileNumber,
-      },
-      include: [Position],
-    })
-    if (created) {
-      await user.setPosition(positionToSet)
-    }
+    const userToAdd = await User.build({ ...userFields })
+    userToAdd.setPosition(positionToSet)
 
-    res.status(201).send(user)
+    // TODO
+    // addedUser.setLeader()
+    // addedUser.SetLed()
+
+    console.log('USER')
+
+    const saveResult = await userToAdd.save()
+    // console.log('SAVE', saveResult)
+
+    res.status(201).send(userToAdd)
   } catch (error) {
     if (error instanceof ValidationError) error.status = 422
     console.error(error)
