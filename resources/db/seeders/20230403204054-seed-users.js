@@ -11,7 +11,6 @@ module.exports = {
       'users',
       [
         {
-          id: 1,
           isAdmin: true,
           firstName: 'admin',
           lastName: 'admin',
@@ -27,7 +26,6 @@ module.exports = {
           teamId: 1,
         },
         {
-          id: 2,
           isAdmin: true,
           firstName: 'Alonso',
           lastName: 'Quijano',
@@ -44,7 +42,6 @@ module.exports = {
           teamId: 1,
         },
         {
-          id: 3,
           isAdmin: false,
           firstName: 'Sancho',
           lastName: 'Panza',

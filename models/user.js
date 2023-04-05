@@ -117,9 +117,7 @@ module.exports = (sequelize, DataTypes) => {
     // See nonybrighto's comment in https://stackoverflow.com/a/48357983/8706387
     toJSON() {
       const userForClient = this.get({ clone: true })
-      ;['id', 'password', 'salt', 'createdAt', 'updatedAt'].forEach(
-        key => delete userForClient[key]
-      )
+      ;['password', 'salt'].forEach(key => delete userForClient[key])
       return userForClient
     }
   }
