@@ -11,11 +11,11 @@ module.exports = (sequelize, DataTypes) => {
     {
       description: {
         type: DataTypes.TEXT,
-        allowNull: false,
+        // allowNull: false,
       },
       goal: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        // allowNull: false,
       },
     },
     {

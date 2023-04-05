@@ -44,7 +44,7 @@ module.exports = (sequelize, DataTypes) => {
           allowNull: false,
           validate: {
             isStrongPassword: {
-              minLength: 8,
+              minLength: 2,
               minLowercase: 0,
               minUppercase: 0,
               minNumbers: 0,
@@ -86,8 +86,8 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static associate(models) {
-      User.hasMany(models.Indicator, { foreignKey: 'evaluatedId' })
-      User.hasMany(models.Indicator, { foreignKey: 'evaluatorId' })
+      User.hasMany(models.Review, { foreignKey: 'evaluatedId' })
+      User.hasMany(models.Review, { foreignKey: 'evaluatorId' })
       User.hasMany(models.User, { as: 'led', foreignKey: 'leaderId' })
       User.belongsTo(models.User, { as: 'leader', foreignKey: 'leaderId' })
       User.belongsTo(models.Position, { foreignKey: 'positionId' })
