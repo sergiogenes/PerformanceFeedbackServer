@@ -11,11 +11,11 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       description: {
-        allowNull: false,
+        // allowNull: false,
         type: Sequelize.TEXT,
       },
       goal: {
-        allowNull: false,
+        // allowNull: false,
         type: Sequelize.INTEGER,
       },
       createdAt: {
@@ -28,7 +28,7 @@ module.exports = {
       },
       categoryId: {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        // allowNull: false,
         references: {
           model: 'categories',
           key: 'id',
