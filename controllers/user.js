@@ -53,7 +53,15 @@ const includeDeactivated = async (req, res, next) => {
 
   try {
     user = await User.findAll({
-      include: [{ model: Position, attributes: ['name'] }],
+      include: [
+        {
+          model: Position,
+        },
+        {
+          model: User,
+          as: 'leader',
+        },
+      ],
     })
   } catch (error) {
     return res.send(console.error(error)).status(400)
@@ -79,6 +87,7 @@ const oneUser = async (req, res, next) => {
 
 const createUser = async (req, res, next) => {
   const { leader, position, ...userFields } = req.body
+
   try {
     const positionToSet = await Position.findOne({
       where: { name: position },
@@ -112,43 +121,38 @@ const createUser = async (req, res, next) => {
 }
 
 const modifyUser = async (req, res, next) => {
-  const {
-    firstName,
-    lastName,
-    email,
-    fileNumber,
-    position: positionId,
-    shift,
-  } = req.body
-  let user
+  const { leader, position, ...userFields } = req.body
+
+  let user, positionToSet, leaderToSet
+
+  if (position)
+    positionToSet = await Position.findOne({ where: { name: position } })
+  if (leader) leaderToSet = await User.findOne({ where: { id: leader } })
 
   try {
-    user = await User.update(
-      { firstName, lastName, email, fileNumber, positionId, shift },
-      { where: { id: req.params.id }, returning: true, individualHooks: true }
-    )
+    user = await User.findByPk(req.params.id)
+    user.update({ ...userFields }, { returning: true })
+    console.log(user)
+
+    if (positionToSet) await user.setPosition(positionToSet)
+    if (leaderToSet) await user.setLeader(leaderToSet)
+
+    res.send(user)
   } catch (error) {
     return res.send(console.error(error)).status(400)
   }
-
-  return res.send(user)
 }
 
 const deactivateUser = async (req, res, next) => {
-  let user
-  const timestamp = Date.now()
-
   try {
-    console.log('HOLA')
-    user = await User.update(
+    await User.update(
       { deactivated_at: new Date() },
       { where: { id: req.params.id }, returning: true, individualHooks: true }
     )
+    res.sendStatus(204)
   } catch (error) {
     return res.send(console.error(error)).status(400)
   }
-
-  return res.sendStatus(204)
 }
 
 module.exports = {

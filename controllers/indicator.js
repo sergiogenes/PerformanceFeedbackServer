@@ -60,13 +60,12 @@ const createIndicator = async (req, res, next) => {
 const modifyIndicator = async (req, res, next) => {
   const { category, ...indicatorFields } = req.body
   let categoryToSet
-  if (category) {
+
+  if (category)
     categoryToSet = await Category.findOne({ where: { name: category } })
-  }
 
   try {
     const indicator = await Indicator.findByPk(req.params.id)
-
     indicator.update({ ...indicatorFields }, { returning: true })
 
     if (categoryToSet) await indicator.setCategory(categoryToSet)
