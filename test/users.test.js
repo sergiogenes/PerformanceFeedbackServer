@@ -1,4 +1,4 @@
-const { describe, before, after, test } = require('node:test')
+const { describe, before, after, it } = require('node:test')
 const assert = require('node:assert/strict')
 const request = require('supertest')
 
@@ -24,7 +24,7 @@ describe('User', () => {
 
   after(() => db.sequelize.close())
 
-  test('Cannot login with non-registered email', async () => {
+  it('Cannot login with non-registered email', async () => {
     const nonRegisteredEmail = 'nonregistered@example.com'
     const response = await request(app)
       .post('/auth/login')
@@ -33,7 +33,7 @@ describe('User', () => {
     assert.deepEqual(response.statusCode, 401)
   })
 
-  test('Cannot login with wrong password', async () => {
+  it('Cannot login with wrong password', async () => {
     const wrongPassword = '87654321'
     const response = await request(app)
       .post('/auth/login')
@@ -42,13 +42,13 @@ describe('User', () => {
     assert.deepEqual(response.statusCode, 401)
   })
 
-  test('Cannot create new users if not an administrator', async () => {
+  it('Cannot create new users if not an administrator', async () => {
     const response = await request(app).post('/users')
 
     assert.deepEqual(response.statusCode, 401)
   })
 
-  test('Can create new users if an administrator', async () => {
+  it('Can create new users if an administrator', async () => {
     const response = await request(app)
       .post('/auth/login')
       .send({ email: administrator.email, password: administrator.password })

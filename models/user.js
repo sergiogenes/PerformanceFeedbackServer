@@ -96,22 +96,41 @@ module.exports = (sequelize, DataTypes) => {
       User.belongsTo(models.Category, { foreignKey: 'categoryId' })
     }
 
-    static findByEmail(email) {
-      return User.findOne({ where: { email } })
+    static async withCredentialsDoIfNone(
+      email,
+      password,
+      foundClosure,
+      noneClosure
+    ) {
+      return await this.findOneDoIfNone(
+        { where: { email } },
+        async user => {
+          if (!(await user.hasPassword(password))) return noneClosure()
+
+          return foundClosure(user)
+        },
+        noneClosure
+      )
     }
 
     static findByFileNumber(fileNumber) {
       return User.findOne({ where: { fileNumber } })
     }
 
+    static async findOneDoIfNone(options, foundClosure, noneClosure) {
+      const foundUser = await this.findOne(options)
+      if (!foundUser) return noneClosure()
+
+      return await foundClosure(foundUser)
+    }
+
     hash(password, salt) {
       return bcrypt.hash(password, salt)
     }
 
-    hasPassword(stringToValidate) {
-      return this.hash(stringToValidate, this.salt).then(
-        newHash => newHash === this.password
-      )
+    async hasPassword(stringToValidate) {
+      const hashed = await this.hash(stringToValidate, this.salt)
+      return hashed === this.password
     }
 
     // See nonybrighto's comment in https://stackoverflow.com/a/48357983/8706387
