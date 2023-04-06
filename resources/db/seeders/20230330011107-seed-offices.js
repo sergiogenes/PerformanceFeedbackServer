@@ -14,14 +14,12 @@ module.exports = {
           updatedAt: date,
         },
         {
-          id: 2,
           name: 'Oficina 2',
           countryId: 2,
           createdAt: date,
           updatedAt: date,
         },
         {
-          id: 3,
           name: 'Oficina 3',
           countryId: 3,
           createdAt: date,
