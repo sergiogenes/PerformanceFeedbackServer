@@ -3,7 +3,10 @@ const { Model } = require('sequelize')
 module.exports = (sequelize, DataTypes) => {
   class Office extends Model {
     static associate(models) {
-      Office.belongsTo(models.Country, { foreignKey: 'countryId' })
+      Office.belongsTo(models.Country, {
+        as: 'country',
+        foreignKey: 'countryId',
+      })
       Office.hasMany(models.User, { foreignKey: 'officeId' })
     }
   }
