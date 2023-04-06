@@ -1,5 +1,5 @@
 const { ValidationError } = require('sequelize')
-const { User, Team } = require('../models')
+const { User, Team, Position } = require('../models')
 
 const allTeam = async (req, res, next) => {
   try {
@@ -7,6 +7,8 @@ const allTeam = async (req, res, next) => {
       include: [
         {
           model: User,
+          where: { deactivated_at: null },
+          include: [{ model: Position }],
         },
       ],
     })
@@ -56,7 +58,7 @@ const modifyTeam = async (req, res, next) => {
 
 const deleteTeam = async (req, res, next) => {
   try {
-    const team = await Team.destroy({ where: { id: req.params.id } })
+    await Team.destroy({ where: { id: req.params.id } })
     res.sendStatus(204)
   } catch (error) {
     return res.send(console.error(error)).status(400)
