@@ -21,7 +21,8 @@ const getOffices = async (req, res) => {
 }
 
 const createOffice = async (req, res) => {
-  const { name } = req.body
+  const name = req.body.name
+  const countryId = req.body.countryId
 
   if (typeof name !== 'string') {
     return res.status(400).json({ Error: 'Caracteres no validos' })
@@ -37,7 +38,10 @@ const createOffice = async (req, res) => {
     if (office) {
       return res.status(400).send({ Error: 'La oficina ya existe' })
     } else {
-      const officeValidate = await Office.create({ name })
+      const officeValidate = await Office.create(
+        { name, countryId },
+        { include: { model: Country, as: 'country' } }
+      )
       return res.status(201).json(officeValidate)
     }
   } catch (error) {
@@ -46,7 +50,7 @@ const createOffice = async (req, res) => {
 }
 
 const updateOffice = async (req, res) => {
-  const { name } = req.body
+  const { name, countryId } = req.body
   const id = req.params.id
 
   if (typeof name !== 'string') {
@@ -63,7 +67,7 @@ const updateOffice = async (req, res) => {
     if (officeById.length > 0) {
       return res.status(403).send('El nombre del puesto ya existe')
     } else {
-      const office = await Office.update({ name }, { where: { id } })
+      const office = await Office.update({ name, countryId }, { where: { id } })
 
       office > 0
         ? res.status(200).send('El puesto fue actualizado')
