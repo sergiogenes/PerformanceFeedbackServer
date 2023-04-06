@@ -8,7 +8,6 @@ module.exports = {
       'categories',
       [
         {
-          id: 1,
           name: 'Categoría 1',
           competence:
             'Esta es el campo donde van las competencias de esta categoría.',
@@ -17,7 +16,6 @@ module.exports = {
           updatedAt: date,
         },
         {
-          id: 2,
           name: 'Categoría 2',
           competence:
             'Esta es el campo donde van las competencias de esta categoría.',
@@ -26,7 +24,6 @@ module.exports = {
           updatedAt: date,
         },
         {
-          id: 3,
           name: 'Categoría 3',
           competence:
             'Esta es el campo donde van las competencias de esta categoría.',

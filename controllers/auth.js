@@ -3,15 +3,9 @@ const { generateToken } = require('../utils/token')
 
 const userLogin = async (req, res, next) => {
   const { email, password } = req.body
-  let user, validation, payload, token
 
-  try {
-    user = await User.findByEmail(email)
-    validation = await user.hasPassword(password)
-
-    if (!validation) return res.status(401).send('Invalid credentials')
-
-    payload = {
+  const sendPayload = user => {
+    const payload = {
       id: user.id,
       firstName: user.firstName,
       lastName: user.lastName,
@@ -22,13 +16,19 @@ const userLogin = async (req, res, next) => {
       deactivated_at: user.deactivated_at,
       shift: user.shift,
     }
-
-    token = generateToken(payload)
-  } catch (error) {
-    return res.send(console.error(error)).status(400)
+    const token = generateToken(payload)
+    return res.cookie('token', token).send({ ...payload })
   }
 
-  return res.cookie('token', token).send({ ...payload })
+  return await User.withCredentialsDoIfNone(
+    email,
+    password,
+    sendPayload,
+    () => {
+      res.sendStatus(401)
+      return next()
+    }
+  )
 }
 
 const userLogout = (req, res) => {

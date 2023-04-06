@@ -8,7 +8,6 @@ module.exports = {
       'indicators',
       [
         {
-          id: 1,
           description: 'Indicador 1',
           goal: 45,
           categoryId: 1,
@@ -16,7 +15,6 @@ module.exports = {
           updatedAt: date,
         },
         {
-          id: 2,
           description: 'Indicador 2',
           goal: 60,
           categoryId: 1,

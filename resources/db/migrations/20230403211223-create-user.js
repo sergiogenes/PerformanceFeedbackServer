@@ -10,22 +10,22 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       firstName: {
-        allowNull: false,
+        // allowNull: false,
         type: Sequelize.STRING,
       },
       lastName: {
-        allowNull: false,
+        // allowNull: false,
         type: Sequelize.STRING,
       },
       email: {
-        allowNull: false,
+        // allowNull: false,
         type: Sequelize.STRING,
       },
       image: {
         type: Sequelize.STRING,
       },
       fileNumber: {
-        allowNull: false,
+        // allowNull: false,
         unique: true,
         type: Sequelize.STRING,
       },
@@ -55,16 +55,16 @@ module.exports = {
         type: Sequelize.ENUM('morning', 'afternoon', 'night'),
       },
       createdAt: {
-        allowNull: false,
+        // allowNull: false,
         type: Sequelize.DATE,
       },
       updatedAt: {
-        allowNull: false,
+        // allowNull: false,
         type: Sequelize.DATE,
       },
       officeId: {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        // allowNull: false,
         references: {
           model: 'offices',
           key: 'id',
@@ -72,7 +72,7 @@ module.exports = {
       },
       teamId: {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        // allowNull: false,
         references: {
           model: 'teams',
           key: 'id',
@@ -80,7 +80,7 @@ module.exports = {
       },
       positionId: {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        // allowNull: false,
         references: {
           model: 'positions',
           key: 'id',
@@ -88,7 +88,7 @@ module.exports = {
       },
       categoryId: {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        // allowNull: false,
         references: {
           model: 'categories',
           key: 'id',

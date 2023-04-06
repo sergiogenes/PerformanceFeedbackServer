@@ -44,7 +44,7 @@ module.exports = (sequelize, DataTypes) => {
           allowNull: false,
           validate: {
             isStrongPassword: {
-              minLength: 8,
+              minLength: 2,
               minLowercase: 0,
               minUppercase: 0,
               minNumbers: 0,
@@ -69,10 +69,17 @@ module.exports = (sequelize, DataTypes) => {
       }
 
       const hooks = {
-        afterValidate: user => {
+        beforeCreate: user => {
           const salt = bcrypt.genSaltSync()
           user.salt = salt
           return user.hash(user.password, salt).then(hash => {
+            user.password = hash
+          })
+        },
+        beforeUpdate: user => {
+          const salt = bcrypt.genSaltSync(9)
+          user.salt = salt
+          return user.hash(user.password, user.salt).then(hash => {
             user.password = hash
           })
         },
@@ -86,8 +93,8 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static associate(models) {
-      User.hasMany(models.Indicator, { foreignKey: 'evaluatedId' })
-      User.hasMany(models.Indicator, { foreignKey: 'evaluatorId' })
+      User.hasMany(models.Review, { foreignKey: 'evaluatedId' })
+      User.hasMany(models.Review, { foreignKey: 'evaluatorId' })
       User.hasMany(models.User, { as: 'led', foreignKey: 'leaderId' })
       User.belongsTo(models.User, { as: 'leader', foreignKey: 'leaderId' })
       User.belongsTo(models.Position, { foreignKey: 'positionId' })
@@ -96,30 +103,47 @@ module.exports = (sequelize, DataTypes) => {
       User.belongsTo(models.Category, { foreignKey: 'categoryId' })
     }
 
-    static findByEmail(email) {
-      return User.findOne({ where: { email } })
+    static async withCredentialsDoIfNone(
+      email,
+      password,
+      foundClosure,
+      noneClosure
+    ) {
+      return await this.findOneDoIfNone(
+        { where: { email } },
+        async user => {
+          if (!(await user.hasPassword(password))) return noneClosure()
+
+          return foundClosure(user)
+        },
+        noneClosure
+      )
     }
 
     static findByFileNumber(fileNumber) {
       return User.findOne({ where: { fileNumber } })
     }
 
+    static async findOneDoIfNone(options, foundClosure, noneClosure) {
+      const foundUser = await this.findOne(options)
+      if (!foundUser) return noneClosure()
+
+      return await foundClosure(foundUser)
+    }
+
     hash(password, salt) {
       return bcrypt.hash(password, salt)
     }
 
-    hasPassword(stringToValidate) {
-      return this.hash(stringToValidate, this.salt).then(
-        newHash => newHash === this.password
-      )
+    async hasPassword(stringToValidate) {
+      const hashed = await this.hash(stringToValidate, this.salt)
+      return hashed === this.password
     }
 
     // See nonybrighto's comment in https://stackoverflow.com/a/48357983/8706387
     toJSON() {
       const userForClient = this.get({ clone: true })
-      ;['id', 'password', 'salt', 'createdAt', 'updatedAt'].forEach(
-        key => delete userForClient[key]
-      )
+      ;['password', 'salt'].forEach(key => delete userForClient[key])
       return userForClient
     }
   }
