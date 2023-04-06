@@ -6,10 +6,11 @@ const {
   deleteOffice,
 } = require('../controllers/office')
 const router = express.Router()
+const { validateAuth } = require('../middleware/auth')
 
-router.get('/', getOffices)
-router.post('/', createOffice)
-router.put('/:id', updateOffice)
-router.delete('/:id', deleteOffice)
+router.get('/', validateAuth, getOffices)
+router.post('/', validateAuth, createOffice)
+router.put('/:id', validateAuth, updateOffice)
+router.delete('/:id', validateAuth, deleteOffice)
 
 module.exports = router
