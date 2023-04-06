@@ -6,6 +6,7 @@ const teamRouter = require('./team')
 const officesRouter = require('./office')
 const categoryRouter = require('./category')
 const indicatorRouter = require('./indicator')
+const countriesRouter = require('./country')
 
 const router = express.Router()
 
@@ -16,5 +17,6 @@ router.use('/teams', teamRouter)
 router.use('/offices', officesRouter)
 router.use('/categories', categoryRouter)
 router.use('/indicators', indicatorRouter)
+router.use('/countries', countriesRouter)
 
 module.exports = router
