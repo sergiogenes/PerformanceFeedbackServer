@@ -11,6 +11,7 @@ const allUser = async (req, res, next) => {
       include: [
         {
           model: Position,
+          as: 'position',
         },
         {
           model: User,

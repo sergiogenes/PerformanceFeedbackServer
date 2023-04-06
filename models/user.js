@@ -97,7 +97,10 @@ module.exports = (sequelize, DataTypes) => {
       User.hasMany(models.Review, { foreignKey: 'evaluatorId' })
       User.hasMany(models.User, { as: 'led', foreignKey: 'leaderId' })
       User.belongsTo(models.User, { as: 'leader', foreignKey: 'leaderId' })
-      User.belongsTo(models.Position, { foreignKey: 'positionId' })
+      User.belongsTo(models.Position, {
+        as: 'position',
+        foreignKey: 'positionId',
+      })
       User.belongsTo(models.Office, { foreignKey: 'officeId' })
       User.belongsTo(models.Team, { foreignKey: 'teamId' })
       User.belongsTo(models.Category, { foreignKey: 'categoryId' })
