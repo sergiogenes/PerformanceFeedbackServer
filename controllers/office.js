@@ -1,13 +1,13 @@
-const { Office, User } = require('../models')
+const { Office, User, Country } = require('../models')
 
 const getOffices = async (req, res) => {
   try {
     const offices = await Office.findAll({
-      include: { model: User },
+      include: { model: Country, as: 'country' },
       order: [['id', 'ASC']],
     })
 
-    console.log(offices)
+    // console.log(offices)
 
     if (!offices) {
       return res
