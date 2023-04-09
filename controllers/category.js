@@ -51,7 +51,9 @@ const deleteCategory = async (req, res, next) => {
     const category = await Category.destroy({ where: { id: req.params.id } })
     res.sendStatus(204)
   } catch (error) {
-    return res.send(console.error(error)).status(400)
+    return res
+      .status(400)
+      .send('No se puede eliminar una Categoría que tenga Usuarios asociados')
   }
 }
 
