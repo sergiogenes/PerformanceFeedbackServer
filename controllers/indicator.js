@@ -4,7 +4,8 @@ const { Category, Indicator } = require('../models')
 const allIndicator = async (req, res, next) => {
   try {
     const indicator = await Indicator.findAll({
-      include: [{ model: Category }],
+      order: [['id', 'ASC']],
+      include: [{ model: Category, as: 'category' }],
     })
     res.send(indicator)
   } catch (error) {
@@ -15,7 +16,7 @@ const allIndicator = async (req, res, next) => {
 const oneIndicator = async (req, res, next) => {
   try {
     const indicator = await Indicator.findByPk(req.params.id, {
-      include: [{ model: Category }],
+      include: [{ model: Category, as: 'category' }],
     })
     res.send(indicator)
   } catch (error) {

@@ -16,7 +16,6 @@ const getReviewEvaluator = async (req, res) => {
         attributes: ['firstName', 'lastName', 'shift'],
       },
     ],
-    attributes: ['indicator', 'goal', 'data', 'result', 'review', 'date'],
   })
 
   res.send(getReviews)

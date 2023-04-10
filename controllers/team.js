@@ -9,6 +9,7 @@ const allTeam = async (req, res, next) => {
           model: User,
           where: { deactivated_at: null },
           include: [{ model: Position, as: 'position' }],
+          order: [['id', 'ASC']],
         },
       ],
     })
