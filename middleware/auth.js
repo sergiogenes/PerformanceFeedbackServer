@@ -12,7 +12,7 @@ const validateAuth = (req, res, next) => {
 }
 
 const validateAdmin = (req, res, next) => {
-  if (!req.user.admin) return res.sendStatus(401)
+  if (!req.user.isAdmin) return res.sendStatus(401)
   next()
 }
 
