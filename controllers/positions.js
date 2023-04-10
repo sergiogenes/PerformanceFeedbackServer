@@ -1,50 +1,21 @@
 const { Position, User } = require('../models')
-const { verifyToken } = require('../utils/token')
-
-const validatePermissions = async (req, res, next) => {
-  const verifyAdmin = verifyToken(req.cookies.token).isAdmin
-
-  if (!verifyAdmin) {
-    return res.status(403).send({ Error: 'Permisos no concedidos' })
-  }
-  next()
-}
 
 const getPositions = async (req, res, next) => {
-  let Positions
+  let positions
 
   try {
-    const positions = await Position.findAll({
-      include: [
-        {
-          model: User,
-          attributes: [
-            'id',
-            'firstName',
-            'lastName',
-            'email',
-            'image',
-            'fileNumber',
-            'isAdmin',
-            'shift',
-            'deactivated_at',
-          ],
-        },
-      ],
+    positions = await Position.findAll({
+      include: [{ model: User, as: 'user' }],
       order: [['id', 'ASC']],
     })
 
     if (!positions)
-      return res
-        .status(401)
-        .send('Error: No se han agregado puestos de trabajo')
-
-    Positions = positions
+      return res.status(401).send('No se han agregado puestos de trabajo')
   } catch (error) {
     return res.send(console.error(error)).status(400)
   }
 
-  return res.status(200).json(Positions)
+  return res.status(200).json(positions)
 }
 
 const createPosition = async (req, res, next) => {
@@ -109,6 +80,5 @@ module.exports = {
   getPositions,
   createPosition,
   deletePosition,
-  validatePermissions,
   updatePosition,
 }

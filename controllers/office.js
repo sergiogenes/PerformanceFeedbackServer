@@ -1,8 +1,7 @@
-const { Office, User, Country, Sequelize } = require('../models')
+const { Office, Country, Sequelize } = require('../models')
 const errorInvalidCharacters = { Error: 'Error no characters' }
 const errorEmptyOfficeName = { Error: 'Empty office name' }
 const errorTooManyCharacters = { Error: 'The name has too many characters' }
-
 
 const getOffices = async (req, res) => {
   try {
@@ -32,8 +31,8 @@ const createOffice = async (req, res) => {
   }
 
   try {
-    const officeChecker = await Office.findOne({ where: { name } });
-      const countryChecker = await Country.findByPk(countryId)
+    const officeChecker = await Office.findOne({ where: { name } })
+    const countryChecker = await Country.findByPk(countryId)
 
     if (officeChecker) {
       return res.status(400).send({ Error: 'The office already exist' })
@@ -67,9 +66,9 @@ const updateOffice = async (req, res) => {
     const officeById = await Office.findAll({
       where: { name, id: { [Sequelize.Op.not]: id } },
     })
-      const countryChecker = await Country.findByPk(countryId)
+    const countryChecker = await Country.findByPk(countryId)
 
-    if (officeChecker) {
+    if (officeById) {
       return res.status(403).send('The office name already exist')
     } else if (!countryChecker) {
       return res.status(400).send({ Error: 'The country does not exist' })

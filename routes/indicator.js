@@ -9,13 +9,13 @@ const {
   modifyIndicator,
   deleteIndicator,
 } = require('../controllers/indicator')
-const { validateAuth } = require('../middleware/auth')
+const { validateAuth, validateAdmin } = require('../middleware/auth')
 
 router.get('/', validateAuth, allIndicator)
 router.get('/:id', validateAuth, oneIndicator)
 router.get('/category/:id', validateAuth, allIndicatorCategory)
-router.post('/', validateAuth, createIndicator)
-router.put('/:id', validateAuth, modifyIndicator)
-router.delete('/:id', validateAuth, deleteIndicator)
+router.post('/', validateAuth, validateAdmin, createIndicator)
+router.put('/:id', validateAuth, validateAdmin, modifyIndicator)
+router.delete('/:id', validateAuth, validateAdmin, deleteIndicator)
 
 module.exports = router

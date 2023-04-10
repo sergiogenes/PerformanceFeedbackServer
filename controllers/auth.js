@@ -16,6 +16,10 @@ const userLogin = async (req, res, next) => {
       deactivated_at: user.deactivated_at,
       shift: user.shift,
       categoryId: user.categoryId,
+      officeId: user.officeId,
+      positionId: user.positionId,
+      teamId: user.teamId,
+      leaderId: user.leaderId,
     }
     const token = generateToken(payload)
     return res.cookie('token', token).send({ ...payload })

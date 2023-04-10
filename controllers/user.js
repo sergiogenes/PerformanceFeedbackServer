@@ -14,6 +14,7 @@ const allUser = async (req, res, next) => {
         { model: Office, as: 'office' },
         { model: User, as: 'leader' },
       ],
+      order: [['id', 'ASC']],
     })
   } catch (error) {
     return res.send(console.error(error)).status(400)
@@ -35,6 +36,7 @@ const allEmpleados = async (req, res, next) => {
         { model: Office, as: 'office' },
         { model: User, as: 'leader' },
       ],
+      order: [['id', 'ASC']],
     })
   } catch (error) {
     return res.send(console.error(error)).status(400)
@@ -55,6 +57,7 @@ const includeDeactivated = async (req, res, next) => {
         { model: Office, as: 'office' },
         { model: User, as: 'leader' },
       ],
+      order: [['id', 'ASC']],
     })
   } catch (error) {
     return res.send(console.error(error)).status(400)
@@ -75,11 +78,7 @@ const oneUser = async (req, res, next) => {
         { model: Category, as: 'category' },
         { model: Office, as: 'office' },
         { model: User, as: 'leader' },
-        {
-          model: Review,
-          as: 'evaluated',
-          attributes: ['indicator', 'goal', 'data', 'result', 'review', 'date'],
-        }
+        { model: Review, as: 'evaluated' },
       ],
     })
   } catch (error) {
@@ -139,7 +138,8 @@ const modifyUser = async (req, res, next) => {
   if (team) teamToSet = await Team.findByPk(team)
   if (category) categoryToSet = await Category.findByPk(team)
   if (office) officeToSet = await Office.findByPk(office)
-  if (leader) leaderToSet = await User.findOne({ where: { id: leader } })
+  if (leader)
+    leaderToSet = await User.findOne({ where: { fileNumber: leader } })
 
   try {
     user = await User.findByPk(req.params.id)

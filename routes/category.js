@@ -8,12 +8,12 @@ const {
   modifyCategory,
   deleteCategory,
 } = require('../controllers/category')
-const { validateAuth } = require('../middleware/auth')
+const { validateAuth, validateAdmin } = require('../middleware/auth')
 
 router.get('/', validateAuth, allCategory)
 router.get('/:id', validateAuth, oneCategory)
-router.post('/', validateAuth, createCategory)
-router.put('/:id', validateAuth, modifyCategory)
-router.delete('/:id', validateAuth, deleteCategory)
+router.post('/', validateAuth, validateAdmin, createCategory)
+router.put('/:id', validateAuth, validateAdmin, modifyCategory)
+router.delete('/:id', validateAuth, validateAdmin, deleteCategory)
 
 module.exports = router

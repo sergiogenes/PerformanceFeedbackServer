@@ -9,14 +9,14 @@ const {
   deactivateUser,
   allEmpleados,
 } = require('../controllers/user')
-const { validateAuth } = require('../middleware/auth')
+const { validateAuth, validateAdmin } = require('../middleware/auth')
 
 router.get('/', validateAuth, allUser)
 router.get('/all', validateAuth, includeDeactivated)
 router.get('/:id', validateAuth, oneUser)
 router.get('/empleados/:id', validateAuth, allEmpleados)
-router.post('/', validateAuth, createUser)
+router.post('/', validateAuth, validateAdmin, createUser)
 router.put('/:id', validateAuth, modifyUser)
-router.put('/deactivate/:id', validateAuth, deactivateUser)
+router.put('/deactivate/:id', validateAuth, validateAdmin, deactivateUser)
 
 module.exports = router
