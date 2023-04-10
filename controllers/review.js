@@ -22,15 +22,10 @@ const getReviewEvaluator = async (req, res) => {
 }
 
 const createReview = async (req, res) => {
-  const { indicator, goal, data, review, date, evaluatedId, evaluatorId } =
-    req.body
+  const { evaluatedId, evaluatorId, ...reviewFields } = req.body
   try {
     const createReview = await Review.create({
-      indicator,
-      goal,
-      data,
-      review,
-      date,
+      ...reviewFields,
       evaluatedId,
       evaluatorId,
     })
