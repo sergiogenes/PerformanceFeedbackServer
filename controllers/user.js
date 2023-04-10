@@ -89,10 +89,10 @@ const createUser = async (req, res, next) => {
   const { leader, position, team, category, office, ...userFields } = req.body
 
   try {
-    const positionToSet = await Position.findByPk(Number(position))
-    const teamToSet = await Team.findByPk(Number(team))
-    const categoryToSet = await Category.findByPk(Number(team))
-    const officeToSet = await Office.findByPk(Number(office))
+    const positionToSet = await Position.findByPk(position)
+    const teamToSet = await Team.findByPk(team)
+    const categoryToSet = await Category.findByPk(team)
+    const officeToSet = await Office.findByPk(office)
     const leaderToSet = await User.findOne({ where: { fileNumber: leader } })
 
     // TODO cambiar por findOrBuild y luego save
