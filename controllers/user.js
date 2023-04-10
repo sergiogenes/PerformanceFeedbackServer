@@ -1,6 +1,6 @@
 const { ValidationError } = require('sequelize')
 
-const { User, Position } = require('../models')
+const { User, Position, Team, Category, Office } = require('../models')
 
 const allUser = async (req, res, next) => {
   let user
@@ -9,14 +9,11 @@ const allUser = async (req, res, next) => {
     user = await User.findAll({
       where: { deactivated_at: null },
       include: [
-        {
-          model: Position,
-          as: 'position',
-        },
-        {
-          model: User,
-          as: 'leader',
-        },
+        { model: Position, as: 'position' },
+        { model: Team, as: 'team' },
+        { model: Category, as: 'category' },
+        { model: Office, as: 'office' },
+        { model: User, as: 'leader' },
       ],
     })
   } catch (error) {
@@ -33,13 +30,11 @@ const allEmpleados = async (req, res, next) => {
     user = await User.findAll({
       where: { leaderId: req.params.id },
       include: [
-        {
-          model: Position,
-        },
-        {
-          model: User,
-          as: 'leader',
-        },
+        { model: Position, as: 'position' },
+        { model: Team, as: 'team' },
+        { model: Category, as: 'category' },
+        { model: Office, as: 'office' },
+        { model: User, as: 'leader' },
       ],
     })
   } catch (error) {
@@ -55,13 +50,11 @@ const includeDeactivated = async (req, res, next) => {
   try {
     user = await User.findAll({
       include: [
-        {
-          model: Position,
-        },
-        {
-          model: User,
-          as: 'leader',
-        },
+        { model: Position, as: 'position' },
+        { model: Team, as: 'team' },
+        { model: Category, as: 'category' },
+        { model: Office, as: 'office' },
+        { model: User, as: 'leader' },
       ],
     })
   } catch (error) {
@@ -77,7 +70,13 @@ const oneUser = async (req, res, next) => {
 
   try {
     user = await User.findByPk(id, {
-      include: [{ model: Position, attributes: ['name'] }],
+      include: [
+        { model: Position, as: 'position' },
+        { model: Team, as: 'team' },
+        { model: Category, as: 'category' },
+        { model: Office, as: 'office' },
+        { model: User, as: 'leader' },
+      ],
     })
   } catch (error) {
     return res.send(console.error(error)).status(400)
@@ -87,17 +86,14 @@ const oneUser = async (req, res, next) => {
 }
 
 const createUser = async (req, res, next) => {
-  const { leader, position, ...userFields } = req.body
+  const { leader, position, team, category, office, ...userFields } = req.body
 
   try {
-    const positionToSet = await Position.findOne({
-      where: { name: position },
-    })
-
-    const leaderToSet = await User.findOne({ where: { id: leader } })
-
-    // TODO recuperar el teamId
-    // TODO recuperar el officeId
+    const positionToSet = await Position.findByPk(position)
+    const teamToSet = await Team.findByPk(team)
+    const categoryToSet = await Category.findByPk(team)
+    const officeToSet = await Office.findByPk(office)
+    const leaderToSet = await User.findOne({ where: { fileNumber: leader } })
 
     // TODO cambiar por findOrBuild y luego save
     const [user, created] = await User.findOrCreate({
@@ -106,10 +102,19 @@ const createUser = async (req, res, next) => {
         ...userFields,
         password: userFields.fileNumber,
       },
-      include: [{ model: Position }, { model: User, as: 'leader' }],
+      include: [
+        { model: Position, as: 'position' },
+        { model: Team, as: 'team' },
+        { model: Category, as: 'category' },
+        { model: Office, as: 'office' },
+        { model: User, as: 'leader' },
+      ],
     })
     if (created) {
       await user.setPosition(positionToSet)
+      await user.setTeam(teamToSet)
+      await user.setCategory(categoryToSet)
+      await user.setOffice(officeToSet)
       await user.setLeader(leaderToSet)
     }
 
@@ -122,20 +127,24 @@ const createUser = async (req, res, next) => {
 }
 
 const modifyUser = async (req, res, next) => {
-  const { leader, position, ...userFields } = req.body
+  const { leader, position, team, category, office, ...userFields } = req.body
 
-  let user, positionToSet, leaderToSet
+  let user, positionToSet, teamToSet, categoryToSet, officeToSet, leaderToSet
 
-  if (position)
-    positionToSet = await Position.findOne({ where: { name: position } })
+  if (position) positionToSet = await Position.findByPk(position)
+  if (team) teamToSet = await Team.findByPk(team)
+  if (category) categoryToSet = await Category.findByPk(team)
+  if (office) officeToSet = await Office.findByPk(office)
   if (leader) leaderToSet = await User.findOne({ where: { id: leader } })
 
   try {
     user = await User.findByPk(req.params.id)
     user.update({ ...userFields }, { returning: true })
-    console.log(user)
 
     if (positionToSet) await user.setPosition(positionToSet)
+    if (teamToSet) await user.setTeam(teamToSet)
+    if (categoryToSet) await user.setCategory(categoryToSet)
+    if (officeToSet) await user.setOffice(officeToSet)
     if (leaderToSet) await user.setLeader(leaderToSet)
 
     res.send(user)

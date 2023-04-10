@@ -1,8 +1,8 @@
-const { Office, Country } = require('../models')
-
+const { Office, User, Country, Sequelize } = require('../models')
 const errorInvalidCharacters = { Error: 'Error no characters' }
 const errorEmptyOfficeName = { Error: 'Empty office name' }
 const errorTooManyCharacters = { Error: 'The name has too many characters' }
+
 
 const getOffices = async (req, res) => {
   try {
@@ -64,7 +64,9 @@ const updateOffice = async (req, res) => {
   }
 
   try {
-    const officeChecker = await Office.findOne({ where: { name } });
+    const officeById = await Office.findAll({
+      where: { name, id: { [Sequelize.Op.not]: id } },
+    })
       const countryChecker = await Country.findByPk(countryId)
 
     if (officeChecker) {
