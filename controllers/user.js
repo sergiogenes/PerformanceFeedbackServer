@@ -1,6 +1,6 @@
 const { ValidationError } = require('sequelize')
 
-const { User, Position } = require('../models')
+const { User, Position, Review } = require('../models')
 
 const allUser = async (req, res, next) => {
   let user
@@ -77,7 +77,18 @@ const oneUser = async (req, res, next) => {
 
   try {
     user = await User.findByPk(id, {
-      include: [{ model: Position, attributes: ['name'] }],
+      include: [
+        {
+          model: Position,
+          as: 'position',
+          attributes: ['name'],
+        },
+        {
+          model: Review,
+          as: 'evaluated',
+          attributes: ['indicator', 'goal', 'data', 'result', 'review', 'date'],
+        },
+      ],
     })
   } catch (error) {
     return res.send(console.error(error)).status(400)
