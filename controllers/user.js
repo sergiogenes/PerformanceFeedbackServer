@@ -138,7 +138,8 @@ const modifyUser = async (req, res, next) => {
   if (team) teamToSet = await Team.findByPk(team)
   if (category) categoryToSet = await Category.findByPk(team)
   if (office) officeToSet = await Office.findByPk(office)
-  if (leader) leaderToSet = await User.findOne({ where: { id: leader } })
+  if (leader)
+    leaderToSet = await User.findOne({ where: { fileNumber: leader } })
 
   try {
     user = await User.findByPk(req.params.id)
