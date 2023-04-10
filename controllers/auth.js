@@ -15,6 +15,7 @@ const userLogin = async (req, res, next) => {
       isAdmin: user.isAdmin,
       deactivated_at: user.deactivated_at,
       shift: user.shift,
+      categoryId: user.categoryId,
     }
     const token = generateToken(payload)
     return res.cookie('token', token).send({ ...payload })

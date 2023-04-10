@@ -63,7 +63,7 @@ module.exports = (sequelize, DataTypes) => {
           type: DataTypes.DATE,
         },
         shift: {
-          type: DataTypes.ENUM('morning', 'afternoon', 'nigth'),
+          type: DataTypes.ENUM('morning', 'afternoon', 'night'),
           defaultValue: 'morning',
         },
       }
@@ -107,9 +107,12 @@ module.exports = (sequelize, DataTypes) => {
         as: 'position',
         foreignKey: 'positionId',
       })
-      User.belongsTo(models.Office, { foreignKey: 'officeId' })
-      User.belongsTo(models.Team, { foreignKey: 'teamId' })
-      User.belongsTo(models.Category, { foreignKey: 'categoryId' })
+      User.belongsTo(models.Office, { as: 'office', foreignKey: 'officeId' })
+      User.belongsTo(models.Team, { as: 'team', foreignKey: 'teamId' })
+      User.belongsTo(models.Category, {
+        as: 'category',
+        foreignKey: 'categoryId',
+      })
     }
 
     static async withCredentialsDoIfNone(
