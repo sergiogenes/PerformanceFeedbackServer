@@ -1,4 +1,4 @@
-const { Office, User, Country } = require('../models')
+const { Office, User, Country, Sequelize } = require('../models')
 
 const getOffices = async (req, res) => {
   try {
@@ -62,7 +62,9 @@ const updateOffice = async (req, res) => {
   }
 
   try {
-    const officeById = await Office.findAll({ where: { name } })
+    const officeById = await Office.findAll({
+      where: { name, id: { [Sequelize.Op.not]: id } },
+    })
 
     if (officeById.length > 0) {
       return res.status(403).send('El nombre del puesto ya existe')
