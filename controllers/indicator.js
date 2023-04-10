@@ -27,7 +27,7 @@ const allIndicatorCategory = async (req, res, next) => {
   try {
     const indicator = await Indicator.findAll({
       where: { categoryId: req.params.id },
-      include: [{ model: Category }],
+      include: [{ model: Category, as: 'category' }],
     })
     res.send(indicator)
   } catch (error) {
