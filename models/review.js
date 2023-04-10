@@ -4,8 +4,14 @@ const { Model } = require('sequelize')
 module.exports = (sequelize, DataTypes) => {
   class Review extends Model {
     static associate(models) {
-      Review.belongsTo(models.User, { foreignKey: 'evaluatedId' })
-      Review.belongsTo(models.User, { foreignKey: 'evaluatorId' })
+      Review.belongsTo(models.User, {
+        as: 'evaluated',
+        foreignKey: 'evaluatedId',
+      })
+      Review.belongsTo(models.User, {
+        as: 'evaluator',
+        foreignKey: 'evaluatorId',
+      })
     }
   }
   Review.init(

@@ -1,6 +1,5 @@
 const { ValidationError } = require('sequelize')
-
-const { User, Position, Team, Category, Office } = require('../models')
+const { User, Position, Team, Category, Office, Review } = require('../models')
 
 const allUser = async (req, res, next) => {
   let user
@@ -76,6 +75,11 @@ const oneUser = async (req, res, next) => {
         { model: Category, as: 'category' },
         { model: Office, as: 'office' },
         { model: User, as: 'leader' },
+        {
+          model: Review,
+          as: 'evaluated',
+          attributes: ['indicator', 'goal', 'data', 'result', 'review', 'date'],
+        }
       ],
     })
   } catch (error) {
