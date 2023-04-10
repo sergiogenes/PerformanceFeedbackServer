@@ -10,11 +10,21 @@ const getReviewEvaluator = async (req, res) => {
   const getReviews = await Review.findAll({
     where: { evaluatorId: id },
     include: [
-      {
-        model: User,
-        as: 'evaluated',
-        attributes: ['firstName', 'lastName', 'shift'],
-      },
+      { model: User, as: 'evaluated' },
+      { model: User, as: 'evaluator' },
+    ],
+  })
+
+  res.send(getReviews)
+}
+
+const getReviewEvaluated = async (req, res) => {
+  const { id } = req.params
+  const getReviews = await Review.findAll({
+    where: { evaluatedId: id },
+    include: [
+      { model: User, as: 'evaluated' },
+      { model: User, as: 'evaluator' },
     ],
   })
 
@@ -59,5 +69,6 @@ module.exports = {
   getReviews,
   createReview,
   getReviewEvaluator,
+  getReviewEvaluated,
   deleteReview,
 }
