@@ -1,16 +1,16 @@
 const express = require('express')
 const router = express.Router()
 const {
-  validatePermissions,
   getPositions,
   createPosition,
   updatePosition,
   deletePosition,
 } = require('../controllers/positions')
+const { validateAuth, validateAdmin } = require('../middleware/auth')
 
-router.get('/', getPositions)
-router.post('/', validatePermissions, createPosition)
-router.put('/:id', validatePermissions, updatePosition)
-router.delete('/:id', validatePermissions, deletePosition)
+router.get('/', validateAuth, getPositions)
+router.post('/', validateAuth, validateAdmin, createPosition)
+router.put('/:id', validateAuth, validateAdmin, updatePosition)
+router.delete('/:id', validateAuth, validateAdmin, deletePosition)
 
 module.exports = router

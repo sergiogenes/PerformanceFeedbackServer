@@ -1,14 +1,4 @@
 const { Position, User } = require('../models')
-const { verifyToken } = require('../utils/token')
-
-const validatePermissions = async (req, res, next) => {
-  const verifyAdmin = verifyToken(req.cookies.token).isAdmin
-
-  if (!verifyAdmin) {
-    return res.status(403).send({ Error: 'Permisos no concedidos' })
-  }
-  next()
-}
 
 const getPositions = async (req, res, next) => {
   let positions
@@ -90,6 +80,5 @@ module.exports = {
   getPositions,
   createPosition,
   deletePosition,
-  validatePermissions,
   updatePosition,
 }
