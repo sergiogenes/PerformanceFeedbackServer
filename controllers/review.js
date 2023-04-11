@@ -1,7 +1,19 @@
 const { Review, User, Category } = require('../models')
 
 const getReviews = async (req, res) => {
-  const reviews = await Review.findAll()
+  const reviews = await Review.findAll({
+    include: [
+      {
+        model: User,
+        as: 'evaluated',
+        include: [{ model: Category, as: 'category' }],
+      },
+      {
+        model: User,
+        as: 'evaluator',
+      },
+    ],
+  })
   res.send(reviews)
 }
 
@@ -10,8 +22,16 @@ const getReviewEvaluator = async (req, res) => {
   const getReviews = await Review.findAll({
     where: { evaluatorId: id },
     include: [
-      { model: User, as: 'evaluated' },
-      { model: User, as: 'evaluator' },
+      {
+        model: User,
+        as: 'evaluated',
+        include: [{ model: Category, as: 'category' }],
+      },
+      {
+        model: User,
+        as: 'evaluator',
+        include: [{ model: Category, as: 'category' }],
+      },
     ],
   })
 
