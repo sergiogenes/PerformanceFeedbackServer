@@ -16,6 +16,9 @@ module.exports = (sequelize, DataTypes) => {
   }
   Review.init(
     {
+      idIndicator: {
+        type: DataTypes.INTEGER,
+      },
       indicator: {
         type: DataTypes.TEXT,
         allowNull: false,
@@ -26,17 +29,18 @@ module.exports = (sequelize, DataTypes) => {
       },
       data: {
         type: DataTypes.INTEGER,
-        allowNull: false,
       },
       result: {
         type: DataTypes.INTEGER,
       },
       review: {
         type: DataTypes.TEXT,
-        allowNull: false,
       },
       date: {
         type: DataTypes.DATE,
+      },
+      period: {
+        type: DataTypes.STRING,
       },
     },
     {
