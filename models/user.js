@@ -72,6 +72,7 @@ module.exports = (sequelize, DataTypes) => {
         beforeCreate: user => {
           const salt = bcrypt.genSaltSync()
           user.salt = salt
+          user.image = `https://api.multiavatar.com/${user.fileNumber}.svg`
           return user.hash(user.password, salt).then(hash => {
             user.password = hash
           })
