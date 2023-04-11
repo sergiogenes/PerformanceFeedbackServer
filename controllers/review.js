@@ -1,4 +1,4 @@
-const { Review, User } = require('../models')
+const { Review, User, Category } = require('../models')
 
 const getReviews = async (req, res) => {
   const reviews = await Review.findAll()
@@ -23,7 +23,11 @@ const getReviewEvaluated = async (req, res) => {
   const getReviews = await Review.findAll({
     where: { evaluatedId: id },
     include: [
-      { model: User, as: 'evaluated' },
+      {
+        model: User,
+        as: 'evaluated',
+        include: [{ model: Category, as: 'category' }],
+      },
       { model: User, as: 'evaluator' },
     ],
   })
