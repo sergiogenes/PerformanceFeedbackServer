@@ -3,7 +3,6 @@ const { generateToken } = require('../utils/token')
 
 const userLogin = (req, res) => {
   const { email, password } = req.body
-
   User.withCredentialsDoIfNone(
     email,
     password,

@@ -10,6 +10,9 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
+      idIndicator: {
+        type: Sequelize.INTEGER,
+      },
       indicator: {
         allowNull: false,
         type: Sequelize.TEXT,
@@ -19,19 +22,19 @@ module.exports = {
         type: Sequelize.INTEGER,
       },
       data: {
-        allowNull: false,
         type: Sequelize.INTEGER,
       },
       result: {
         type: Sequelize.INTEGER,
       },
       review: {
-        allowNull: false,
         type: Sequelize.TEXT,
       },
       date: {
-        allowNull: false,
         type: Sequelize.DATE,
+      },
+      period: {
+        type: Sequelize.STRING,
       },
       createdAt: {
         allowNull: false,
@@ -43,7 +46,6 @@ module.exports = {
       },
       evaluatedId: {
         type: Sequelize.INTEGER,
-        allowNull: false,
         references: {
           model: 'users',
           key: 'id',
@@ -51,7 +53,6 @@ module.exports = {
       },
       evaluatorId: {
         type: Sequelize.INTEGER,
-        allowNull: false,
         references: {
           model: 'users',
           key: 'id',

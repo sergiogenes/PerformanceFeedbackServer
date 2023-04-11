@@ -63,7 +63,7 @@ module.exports = (sequelize, DataTypes) => {
           type: DataTypes.DATE,
         },
         shift: {
-          type: DataTypes.ENUM('morning', 'afternoon', 'nigth'),
+          type: DataTypes.ENUM('morning', 'afternoon', 'night'),
           defaultValue: 'morning',
         },
       }
@@ -72,6 +72,7 @@ module.exports = (sequelize, DataTypes) => {
         beforeCreate: user => {
           const salt = bcrypt.genSaltSync()
           user.salt = salt
+          user.image = `https://api.multiavatar.com/${user.fileNumber}.svg`
           return user.hash(user.password, salt).then(hash => {
             user.password = hash
           })
@@ -93,17 +94,26 @@ module.exports = (sequelize, DataTypes) => {
     }
 
     static associate(models) {
-      User.hasMany(models.Review, { foreignKey: 'evaluatedId' })
-      User.hasMany(models.Review, { foreignKey: 'evaluatorId' })
+      User.hasMany(models.Review, {
+        as: 'evaluated',
+        foreignKey: 'evaluatedId',
+      })
+      User.hasMany(models.Review, {
+        as: 'evaluator',
+        foreignKey: 'evaluatorId',
+      })
       User.hasMany(models.User, { as: 'led', foreignKey: 'leaderId' })
       User.belongsTo(models.User, { as: 'leader', foreignKey: 'leaderId' })
       User.belongsTo(models.Position, {
         as: 'position',
         foreignKey: 'positionId',
       })
-      User.belongsTo(models.Office, { foreignKey: 'officeId' })
-      User.belongsTo(models.Team, { foreignKey: 'teamId' })
-      User.belongsTo(models.Category, { foreignKey: 'categoryId' })
+      User.belongsTo(models.Office, { as: 'office', foreignKey: 'officeId' })
+      User.belongsTo(models.Team, { as: 'team', foreignKey: 'teamId' })
+      User.belongsTo(models.Category, {
+        as: 'category',
+        foreignKey: 'categoryId',
+      })
     }
 
     static async withCredentialsDoIfNone(

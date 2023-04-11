@@ -3,7 +3,7 @@ const { Category } = require('../models')
 
 const allCategory = async (req, res, next) => {
   try {
-    const category = await Category.findAll()
+    const category = await Category.findAll({ order: [['id', 'ASC']] })
     res.send(category)
   } catch (error) {
     return res.send(console.error(error)).status(400)

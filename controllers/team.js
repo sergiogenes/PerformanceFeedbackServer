@@ -8,7 +8,8 @@ const allTeam = async (req, res, next) => {
         {
           model: User,
           where: { deactivated_at: null },
-          include: [{ model: Position }],
+          include: [{ model: Position, as: 'position' }],
+          order: [['id', 'ASC']],
         },
       ],
     })
@@ -21,7 +22,9 @@ const allTeam = async (req, res, next) => {
 const oneTeam = async (req, res, next) => {
   try {
     const team = await Team.findByPk(req.params.id, {
-      include: [{ model: User }],
+      include: [
+        { model: User, include: [{ model: Position, as: 'position' }] },
+      ],
     })
     res.send(team)
   } catch (error) {
