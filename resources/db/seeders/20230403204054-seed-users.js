@@ -27,7 +27,7 @@ module.exports = {
           teamId: 1,
         },
         {
-          isAdmin: true,
+          isAdmin: false,
           firstName: 'Alonso',
           lastName: 'Quijano',
           password: bcrypt.hashSync('12345678', salt),
