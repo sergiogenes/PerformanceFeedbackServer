@@ -116,7 +116,7 @@ module.exports = (sequelize, DataTypes) => {
       })
     }
 
-    static async withCredentialsDoIfNone(
+    static async withEmailAndPasswordDoIfNone(
       email,
       password,
       foundClosure,
@@ -133,8 +133,8 @@ module.exports = (sequelize, DataTypes) => {
       )
     }
 
-    static findByFileNumber(fileNumber) {
-      return User.findOne({ where: { fileNumber } })
+    static async findByFileNumber(fileNumber) {
+      return await User.findOne({ where: { fileNumber } })
     }
 
     static async findOneDoIfNone(options, foundClosure, noneClosure) {

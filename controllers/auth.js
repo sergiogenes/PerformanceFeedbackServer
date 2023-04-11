@@ -1,20 +1,25 @@
 const { User } = require('../models')
 const { generateToken } = require('../utils/token')
 
-const userLogin = (req, res) => {
+const userLogin = async (req, res, next) => {
   const { email, password } = req.body
-  User.withCredentialsDoIfNone(
-    email,
-    password,
-    user => {
-      const payload = user.toJSON()
-      const token = generateToken(payload)
-      return res.cookie('token', token).send(payload)
-    },
-    () => {
-      return res.sendStatus(401)
-    }
-  )
+
+  try {
+    await User.withEmailAndPasswordDoIfNone(
+      email,
+      password,
+      user => {
+        const payload = user.toJSON()
+        const token = generateToken(payload)
+        res.cookie('token', token).send(payload)
+      },
+      () => {
+        res.sendStatus(401)
+      }
+    )
+  } catch (error) {
+    next(error)
+  }
 }
 
 const userLogout = (_req, res) => {
