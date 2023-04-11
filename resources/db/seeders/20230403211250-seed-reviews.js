@@ -8,6 +8,7 @@ module.exports = {
       'reviews',
       [
         {
+          idIndicator: 1,
           indicator: 'Indicador 1',
           goal: 45,
           data: 40,
@@ -16,10 +17,12 @@ module.exports = {
           date,
           evaluatedId: 2,
           evaluatorId: 1,
+          period: '2022-03',
           createdAt: date,
           updatedAt: date,
         },
         {
+          idIndicator: 2,
           indicator: 'Indicador 2',
           goal: 60,
           data: 70,
@@ -28,6 +31,7 @@ module.exports = {
           evaluatedId: 3,
           evaluatorId: 2,
           date,
+          period: '2022-03',
           createdAt: date,
           updatedAt: date,
         },

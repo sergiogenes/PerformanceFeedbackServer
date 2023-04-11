@@ -31,11 +31,34 @@ const getReviewEvaluated = async (req, res) => {
   res.send(getReviews)
 }
 
+const reviewCheck = async (idIndicator, period, evaluatedId) => {
+  const reviewChecker = await Review.findAll({
+    where: {
+      idIndicator,
+      period,
+      evaluatedId,
+    },
+  })
+
+  return reviewChecker
+}
+
 const createReview = async (req, res) => {
-  const { evaluatedId, evaluatorId, ...reviewFields } = req.body
+  const { evaluatedId, evaluatorId, period, idIndicator, ...reviewFields } =
+    req.body
+
   try {
+    const check = await reviewCheck(idIndicator, period, evaluatedId)
+    if (check[0]) {
+      return res
+        .status(403)
+        .send('Este indicador ya fue evaluado en este período.')
+    }
+
     const createReview = await Review.create({
       ...reviewFields,
+      period,
+      idIndicator,
       evaluatedId,
       evaluatorId,
     })
@@ -46,7 +69,7 @@ const createReview = async (req, res) => {
     }
     return res.status(201).send(createReview)
   } catch (error) {
-    res.send({ Error: error })
+    return res.send(error)
   }
 }
 
