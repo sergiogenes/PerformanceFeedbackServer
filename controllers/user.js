@@ -144,9 +144,12 @@ const modifyUser = async (req, res, next) => {
   try {
     user = await User.findByPk(req.params.id)
     user.update({ ...userFields }, { returning: true })
-
     if (positionToSet) await user.setPosition(positionToSet)
-    if (teamToSet) await user.setTeam(teamToSet)
+    if (teamToSet) {
+      await user.setTeam(teamToSet)
+    } else {
+      user.setTeam(null)
+    }
     if (categoryToSet) await user.setCategory(categoryToSet)
     if (officeToSet) await user.setOffice(officeToSet)
     if (leaderToSet) await user.setLeader(leaderToSet)

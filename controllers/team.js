@@ -1,19 +1,22 @@
 const { ValidationError } = require('sequelize')
-const { User, Team, Position } = require('../models')
+const { User, Team, Position, Category } = require('../models')
 
 const allTeam = async (req, res, next) => {
   try {
-    const team = await Team.findAll({
+    const teams = await Team.findAll({
       include: [
         {
           model: User,
-          where: { deactivated_at: null },
-          include: [{ model: Position, as: 'position' }],
+          // TODO: Volver a incluir el where o utilizar scope
+          include: [
+            { model: Position, as: 'position' },
+            { model: Category, as: 'category' },
+          ],
           order: [['id', 'ASC']],
         },
       ],
     })
-    res.send(team)
+    res.send(teams)
   } catch (error) {
     return res.send(console.error(error)).status(400)
   }
@@ -23,7 +26,13 @@ const oneTeam = async (req, res, next) => {
   try {
     const team = await Team.findByPk(req.params.id, {
       include: [
-        { model: User, include: [{ model: Position, as: 'position' }] },
+        {
+          model: User,
+          include: [
+            { model: Position, as: 'position' },
+            { model: Category, as: 'category' },
+          ],
+        },
       ],
     })
     res.send(team)
@@ -35,13 +44,20 @@ const oneTeam = async (req, res, next) => {
 const createTeam = async (req, res, next) => {
   try {
     const { name } = req.body
-    const team = await Team.create({ name })
-
-    res.status(201).send(team)
+    const [team, created] = await Team.findOrCreate({
+      where: { name },
+      defaults: { name },
+    })
+    console.log(created)
+    if (created) {
+      return res.status(201).send(team)
+    } else {
+      return res.status(409).send('El equipo ya existe')
+    }
   } catch (error) {
     if (error instanceof ValidationError) error.status = 422
     console.error(error)
-    next(error)
+    return next(error)
   }
 }
 
