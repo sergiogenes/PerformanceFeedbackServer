@@ -15,20 +15,20 @@ const getPositions = async (req, res, next) => {
     return res.send(console.error(error)).status(400)
   }
 
-  return res.status(200).json(positions)
+  return res.status(200).send(positions)
 }
 
 const createPosition = async (req, res, next) => {
   const name = req.body.name
   let createdPosition
 
-  if (!name) return res.status(400).json({ Error: 'Nombre vacio' })
+  if (!name) return res.status(400).send('Nombre vacio')
 
   try {
     const position = await Position.findOne({ where: { name } })
 
     if (position) {
-      return res.status(400).send({ Error: 'El puesto ya existe' })
+      return res.status(400).send('El puesto ya existe')
     } else {
       const positionValidate = await Position.create({ name })
       createdPosition = positionValidate
@@ -36,14 +36,14 @@ const createPosition = async (req, res, next) => {
   } catch (error) {
     return res.send(console.error(error)).status(400)
   }
-  return res.status(201).json(createdPosition)
+  return res.status(201).send(createdPosition)
 }
 
 const updatePosition = async (req, res, next) => {
   const { name } = req.body
   const id = req.params.id
 
-  if (!id || !name) return res.status(400).json({ Error: 'Campos vacios' })
+  if (!id || !name) return res.status(400).send('Campos vacios')
 
   try {
     const positionById = await Position.findAll({ where: { name } })
@@ -64,12 +64,12 @@ const updatePosition = async (req, res, next) => {
 
 const deletePosition = async (req, res, next) => {
   const id = req.params.id
-  if (!id) return res.status(400).json({ Error: 'Campos vacíos' })
+  if (!id) return res.status(400).send('Campos vacíos')
 
   try {
     const position = await Position.destroy({ where: { id } })
     position === 0
-      ? res.status(404).json({ Error: 'No se encontró el puesto a eliminar' })
+      ? res.status(404).send('No se encontró el puesto a eliminar')
       : res.status(200).send('Puesto eliminado con éxito!')
   } catch (error) {
     return res.send(console.error(error)).status(400)

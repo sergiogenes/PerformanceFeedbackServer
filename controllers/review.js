@@ -89,7 +89,7 @@ const createReview = async (req, res) => {
     if (!createReview) {
       return res
         .status(400)
-        .send({ Error: 'No se pudo crear la devolución correctamente' })
+        .send('No se pudo crear la devolución correctamente')
     }
     return res.status(201).send(createReview)
   } catch (error) {
@@ -100,12 +100,12 @@ const createReview = async (req, res) => {
 const deleteReview = async (req, res) => {
   const { id } = req.params
 
-  if (!id) return res.status(400).json({ Error: 'Id vacío' })
+  if (!id) return res.status(400).send('Id vacío')
 
   try {
     const reviewDeleted = await Review.destroy({ where: { id } })
     reviewDeleted === 0
-      ? res.status(404).json({ Error: 'No se encontro la devolución' })
+      ? res.status(404).send('No se encontro la devolución')
       : res.status(200).send('Se eliminó la devolución')
   } catch (error) {
     return res.send(console.error(error)).status(400)
