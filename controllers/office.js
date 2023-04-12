@@ -68,7 +68,7 @@ const updateOffice = async (req, res) => {
     })
     const countryChecker = await Country.findByPk(countryId)
 
-    if (officeById) {
+    if (officeById.length) {
       return res.status(403).send('The office name already exist')
     } else if (!countryChecker) {
       return res.status(400).send({ Error: 'The country does not exist' })
