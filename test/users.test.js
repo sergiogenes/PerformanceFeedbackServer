@@ -1,4 +1,3 @@
-const { describe, before, after, it: test } = require('node:test')
 const assert = require('node:assert/strict')
 const request = require('supertest')
 
@@ -7,7 +6,7 @@ const db = require('../models')
 
 const app = createApp()
 
-describe('User', () => {
+suite('User', () => {
   const administrator = {
     isAdmin: true,
     firstName: 'admin',
@@ -17,12 +16,12 @@ describe('User', () => {
     fileNumber: '1',
   }
 
-  before(async () => {
+  suiteSetup(async () => {
     await db.sequelize.sync({ force: true })
     await db.User.create(administrator)
   })
 
-  after(async () => await db.sequelize.close())
+  suiteTeardown(async () => await db.sequelize.close())
 
   test('Cannot login with non-registered email', async () => {
     const nonRegisteredEmail = 'nonregistered@example.com'
