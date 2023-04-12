@@ -78,11 +78,13 @@ module.exports = (sequelize, DataTypes) => {
           })
         },
         beforeUpdate: user => {
-          const salt = bcrypt.genSaltSync(9)
-          user.salt = salt
-          return user.hash(user.password, user.salt).then(hash => {
-            user.password = hash
-          })
+          if (user.changed('password')) {
+            user.salt = bcrypt.genSaltSync(9)
+
+            return user
+              .hash(user.password, user.salt)
+              .then(hash => (user.password = hash))
+          }
         },
       }
 
