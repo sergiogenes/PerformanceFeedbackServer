@@ -58,6 +58,12 @@ module.exports = (sequelize, DataTypes) => {
         isAdmin: {
           type: DataTypes.BOOLEAN,
           defaultValue: false,
+          set(aBoolean) {
+            if (this.isRoot())
+              return console.log('Attempt to demote the root user.')
+
+            this.setDataValue('isAdmin', aBoolean)
+          },
         },
         deactivated_at: {
           type: DataTypes.DATE,

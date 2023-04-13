@@ -61,4 +61,11 @@ suite('User', () => {
 
     assert.deepEqual(root.deactivated_at, null)
   })
+
+  test('The original administrator with id 1, cannot be demoted to a regular user', async () => {
+    const root = await db.User.findByPk(1)
+    root.isAdmin = false
+
+    assert.ok(root.isAdmin)
+  })
 })
