@@ -61,6 +61,12 @@ module.exports = (sequelize, DataTypes) => {
         },
         deactivated_at: {
           type: DataTypes.DATE,
+          set(aDate) {
+            if (this.isRoot())
+              return console.log('Attempt to deactivate root user')
+
+            this.setDataValue('deactivated_at', aDate)
+          },
         },
         shift: {
           type: DataTypes.ENUM('morning', 'afternoon', 'night'),
@@ -144,6 +150,10 @@ module.exports = (sequelize, DataTypes) => {
       if (!foundUser) return noneClosure()
 
       return await foundClosure(foundUser)
+    }
+
+    isRoot() {
+      return this.id === 1
     }
 
     hash(password, salt) {

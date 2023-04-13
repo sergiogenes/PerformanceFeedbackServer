@@ -47,11 +47,18 @@ suite('User', () => {
     assert.deepEqual(response.statusCode, 401)
   })
 
-  test('Can create new users if an administrator', async () => {
+  test('Can create new users only if an administrator', async () => {
     const response = await request(app)
       .post('/auth/login')
       .send({ email: administrator.email, password: administrator.password })
 
     assert.deepEqual(response.statusCode, 200)
+  })
+
+  test('The root user I.e. the original administrator with id 1, AKA "superadministrator" cannot be deactivated', async () => {
+    const root = await db.User.findByPk(1)
+    root.deactivated_at = new Date()
+
+    assert.deepEqual(root.deactivated_at, null)
   })
 })
