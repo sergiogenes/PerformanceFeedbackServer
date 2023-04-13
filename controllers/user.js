@@ -1,5 +1,13 @@
 const { ValidationError } = require('sequelize')
-const { User, Position, Team, Category, Office, Review } = require('../models')
+const {
+  User,
+  Position,
+  Team,
+  Category,
+  Office,
+  Review,
+  Sequelize,
+} = require('../models')
 
 const allUser = async (req, res, next) => {
   let user
@@ -43,6 +51,55 @@ const allEmpleados = async (req, res, next) => {
   }
 
   return res.send(user)
+}
+
+const getAllUsersDesactivated = async (req, res, next) => {
+  const getUserDesactivated = await User.findAll({
+    attributes: [
+      'id',
+      'firstName',
+      'lastName',
+      'email',
+      'image',
+      'fileNumber',
+      'isAdmin',
+      'deactivated_at',
+      'shift',
+    ],
+    where: {
+      deactivated_at: {
+        [Sequelize.Op.ne]: null,
+      },
+    },
+    include: [
+      { model: Position, as: 'position', attributes: ['id', 'name'] },
+      { model: Team, as: 'team', attributes: ['id', 'name'] },
+      {
+        model: Category,
+        as: 'category',
+        attributes: ['id', 'name', 'competence', 'function'],
+      },
+      { model: Office, as: 'office', attributes: ['id', 'name'] },
+      {
+        model: User,
+        as: 'leader',
+        attributes: [
+          'id',
+          'firstName',
+          'lastName',
+          'email',
+          'image',
+          'fileNumber',
+          'isAdmin',
+          'deactivated_at',
+          'shift',
+        ],
+      },
+    ],
+    order: [['id', 'ASC']],
+  })
+
+  res.status(200).send(getUserDesactivated)
 }
 
 const includeDeactivated = async (req, res, next) => {
@@ -180,4 +237,5 @@ module.exports = {
   includeDeactivated,
   deactivateUser,
   allEmpleados,
+  getAllUsersDesactivated,
 }
