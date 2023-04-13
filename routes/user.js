@@ -9,6 +9,7 @@ const {
   deactivateUser,
   allEmpleados,
   getAllUsersDesactivated,
+  userMeEdit,
   getUserCountPositions,
 } = require('../controllers/user')
 const { validateAuth, validateAdmin } = require('../middleware/auth')
@@ -22,5 +23,5 @@ router.get('/empleados/:id', validateAuth, allEmpleados)
 router.post('/', validateAuth, validateAdmin, createUser)
 router.put('/:id', validateAuth, validateAdmin, modifyUser)
 router.put('/deactivate/:id', validateAuth, validateAdmin, deactivateUser)
-
+router.put('/me/edit', validateAuth, userMeEdit)
 module.exports = router
