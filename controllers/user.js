@@ -1,3 +1,5 @@
+const { generateToken } = require('../utils/token')
+
 const { ValidationError } = require('sequelize')
 const {
   User,
@@ -217,6 +219,31 @@ const modifyUser = async (req, res, next) => {
   }
 }
 
+const userMeEdit = async (req, res, next) => {
+  let user, affected, resulting, payload, token
+  const { password, previousPass } = req.body
+  console.log('imprimo pass y previous', password, 'previos', previousPass)
+  if (req.user.password !== previousPass) {
+    const error = new Error('La Contraseña Anterior No Coincide')
+    error.status = 401
+    return res.status(error.status).send(error.message)
+  } else {
+    try {
+      user = await User.findOne({ where: { email: req.user.email } })
+      ;[affected, resulting] = await User.update(
+        { password },
+        { where: { email: user.email }, returning: true, individualHooks: true }
+      )
+      const { id, name, lastName, email, isAdmin } = resulting[0]
+      payload = { id, name, lastName, email, isAdmin }
+      token = await generateToken(payload)
+    } catch (error) {
+      return res.send(error).status(400)
+    }
+    return res.cookie('token', token).send(payload)
+  }
+}
+
 const deactivateUser = async (req, res, next) => {
   try {
     await User.update(
@@ -238,4 +265,5 @@ module.exports = {
   deactivateUser,
   allEmpleados,
   getAllUsersDesactivated,
+  userMeEdit,
 }
