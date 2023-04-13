@@ -255,6 +255,15 @@ const deactivateUser = async (req, res, next) => {
     return res.send(console.error(error)).status(400)
   }
 }
+const getUserCountPositions = async (req, res) => {
+  const getUsers = await User.findAll({
+    attributes: ['positionId', [Sequelize.fn('COUNT', 'positionId'), 'count']],
+    include: [{ model: Position, as: 'position', attributes: ['name'] }],
+    group: ['positionId', 'position.id'],
+  })
+
+  res.send(getUsers)
+}
 
 module.exports = {
   allUser,
@@ -266,4 +275,5 @@ module.exports = {
   allEmpleados,
   getAllUsersDesactivated,
   userMeEdit,
+  getUserCountPositions,
 }
