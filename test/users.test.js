@@ -55,6 +55,12 @@ suite('User', () => {
     assert.deepEqual(response.statusCode, 200)
   })
 
+  test('The user with id 1 must be an administrator', async () => {
+    const firstUser = await db.User.findByPk(1)
+
+    assert(firstUser.isRoot())
+  })
+
   test('The root user I.e. the original administrator with id 1, AKA "superadministrator" cannot be deactivated', async () => {
     const root = await db.User.findByPk(1)
     root.deactivated_at = new Date()
