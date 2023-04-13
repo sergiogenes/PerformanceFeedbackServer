@@ -9,7 +9,7 @@ const allIndicator = async (req, res, next) => {
     })
     res.send(indicator)
   } catch (error) {
-    return res.send(console.error(error)).status(400)
+    next(error)
   }
 }
 
@@ -20,7 +20,7 @@ const oneIndicator = async (req, res, next) => {
     })
     res.send(indicator)
   } catch (error) {
-    return res.send(console.error(error)).status(400)
+    next(error)
   }
 }
 
@@ -32,28 +32,22 @@ const allIndicatorCategory = async (req, res, next) => {
     })
     res.send(indicator)
   } catch (error) {
-    return res.send(console.error(error)).status(400)
+    next(error)
   }
 }
 
 const createIndicator = async (req, res, next) => {
   try {
     const { category, description, goal } = req.body
-    console.log(category)
-
     const categoryToSet = await Category.findOne({ where: { name: category } })
-
     const indicator = await Indicator.create({
       description,
       goal,
     })
-
     await indicator.setCategory(categoryToSet)
-
     res.status(201).send(indicator)
   } catch (error) {
     if (error instanceof ValidationError) error.status = 422
-    console.error(error)
     next(error)
   }
 }
@@ -73,7 +67,7 @@ const modifyIndicator = async (req, res, next) => {
 
     res.send(indicator)
   } catch (error) {
-    return res.send(console.error(error)).status(400)
+    next(error)
   }
 }
 
@@ -82,7 +76,7 @@ const deleteIndicator = async (req, res, next) => {
     await Indicator.destroy({ where: { id: req.params.id } })
     res.sendStatus(204)
   } catch (error) {
-    return res.send(console.error(error)).status(400)
+    next(error)
   }
 }
 

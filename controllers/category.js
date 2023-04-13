@@ -6,7 +6,7 @@ const allCategory = async (req, res, next) => {
     const category = await Category.findAll({ order: [['id', 'ASC']] })
     res.send(category)
   } catch (error) {
-    return res.send(console.error(error)).status(400)
+    next(error)
   }
 }
 
@@ -15,7 +15,7 @@ const oneCategory = async (req, res, next) => {
     const category = await Category.findByPk(req.params.id)
     res.send(category)
   } catch (error) {
-    return res.send(console.error(error)).status(400)
+    next(error)
   }
 }
 
@@ -23,11 +23,9 @@ const createCategory = async (req, res, next) => {
   try {
     const { ...categoryFields } = req.body
     const category = await Category.create({ ...categoryFields })
-
     res.status(201).send(category)
   } catch (error) {
     if (error instanceof ValidationError) error.status = 422
-    console.error(error)
     next(error)
   }
 }
@@ -42,7 +40,7 @@ const modifyCategory = async (req, res, next) => {
     )
     res.send(category)
   } catch (error) {
-    return res.send(console.error(error)).status(400)
+    next(error)
   }
 }
 
@@ -51,9 +49,10 @@ const deleteCategory = async (req, res, next) => {
     const category = await Category.destroy({ where: { id: req.params.id } })
     res.sendStatus(204)
   } catch (error) {
-    return res
-      .status(400)
+    res
+      .status(error.status)
       .send('No se puede eliminar una Categoría que tenga Usuarios asociados')
+    next(error)
   }
 }
 

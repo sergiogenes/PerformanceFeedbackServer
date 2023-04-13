@@ -12,7 +12,7 @@ const getPositions = async (req, res, next) => {
     if (!positions)
       return res.status(401).send('No se han agregado puestos de trabajo')
   } catch (error) {
-    return res.send(console.error(error)).status(400)
+    next(error)
   }
 
   return res.status(200).send(positions)
@@ -21,7 +21,6 @@ const getPositions = async (req, res, next) => {
 const createPosition = async (req, res, next) => {
   const name = req.body.name
   let createdPosition
-
   if (!name) return res.status(400).send('Nombre vacio')
 
   try {
@@ -33,16 +32,15 @@ const createPosition = async (req, res, next) => {
       const positionValidate = await Position.create({ name })
       createdPosition = positionValidate
     }
+    return res.status(201).send(createdPosition)
   } catch (error) {
-    return res.send(console.error(error)).status(400)
+    next(error)
   }
-  return res.status(201).send(createdPosition)
 }
 
 const updatePosition = async (req, res, next) => {
   const { name } = req.body
   const id = req.params.id
-
   if (!id || !name) return res.status(400).send('Campos vacios')
 
   try {
@@ -58,7 +56,7 @@ const updatePosition = async (req, res, next) => {
         : res.status(400).send('El usuario no existe')
     }
   } catch (error) {
-    return res.send(console.error(error)).status(400)
+    next(error)
   }
 }
 
@@ -72,7 +70,7 @@ const deletePosition = async (req, res, next) => {
       ? res.status(404).send('No se encontró el puesto a eliminar')
       : res.status(200).send('Puesto eliminado con éxito!')
   } catch (error) {
-    return res.send(console.error(error)).status(400)
+    next(error)
   }
 }
 

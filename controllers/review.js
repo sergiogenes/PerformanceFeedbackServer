@@ -1,58 +1,68 @@
 const { Review, User, Category } = require('../models')
 
-const getReviews = async (req, res) => {
-  const reviews = await Review.findAll({
-    include: [
-      {
-        model: User,
-        as: 'evaluated',
-        include: [{ model: Category, as: 'category' }],
-      },
-      {
-        model: User,
-        as: 'evaluator',
-      },
-    ],
-  })
-  res.send(reviews)
+const getReviews = async (req, res, next) => {
+  try {
+    const reviews = await Review.findAll({
+      include: [
+        {
+          model: User,
+          as: 'evaluated',
+          include: [{ model: Category, as: 'category' }],
+        },
+        {
+          model: User,
+          as: 'evaluator',
+        },
+      ],
+    })
+    res.send(reviews)
+  } catch (error) {
+    next(error)
+  }
 }
 
-const getReviewEvaluator = async (req, res) => {
+const getReviewEvaluator = async (req, res, next) => {
   const { id } = req.params
-  const getReviews = await Review.findAll({
-    where: { evaluatorId: id },
-    include: [
-      {
-        model: User,
-        as: 'evaluated',
-        include: [{ model: Category, as: 'category' }],
-      },
-      {
-        model: User,
-        as: 'evaluator',
-        include: [{ model: Category, as: 'category' }],
-      },
-    ],
-  })
-
-  res.send(getReviews)
+  try {
+    const getReviews = await Review.findAll({
+      where: { evaluatorId: id },
+      include: [
+        {
+          model: User,
+          as: 'evaluated',
+          include: [{ model: Category, as: 'category' }],
+        },
+        {
+          model: User,
+          as: 'evaluator',
+          include: [{ model: Category, as: 'category' }],
+        },
+      ],
+    })
+    res.send(getReviews)
+  } catch (error) {
+    next(error)
+  }
 }
 
-const getReviewEvaluated = async (req, res) => {
+const getReviewEvaluated = async (req, res, next) => {
   const { id } = req.params
-  const getReviews = await Review.findAll({
-    where: { evaluatedId: id },
-    include: [
-      {
-        model: User,
-        as: 'evaluated',
-        include: [{ model: Category, as: 'category' }],
-      },
-      { model: User, as: 'evaluator' },
-    ],
-  })
-
-  res.send(getReviews)
+  try {
+    const getReviews = await Review.findAll({
+      where: { evaluatedId: id },
+      include: [
+        {
+          model: User,
+          as: 'evaluated',
+          include: [{ model: Category, as: 'category' }],
+        },
+        { model: User, as: 'evaluator' },
+      ],
+    })
+    res.send(getReviews)
+  } catch (error) {
+    next(error)
+  }
 }
 
 const reviewCheck = async (idIndicator, period, evaluatedId) => {
@@ -67,7 +77,7 @@ const reviewCheck = async (idIndicator, period, evaluatedId) => {
   return reviewChecker
 }
 
-const createReview = async (req, res) => {
+const createReview = async (req, res, next) => {
   const { evaluatedId, evaluatorId, period, idIndicator, ...reviewFields } =
     req.body
 
@@ -93,11 +103,11 @@ const createReview = async (req, res) => {
     }
     return res.status(201).send(createReview)
   } catch (error) {
-    return res.send(error)
+    next(error)
   }
 }
 
-const deleteReview = async (req, res) => {
+const deleteReview = async (req, res, next) => {
   const { id } = req.params
 
   if (!id) return res.status(400).send('Id vacío')
@@ -108,7 +118,7 @@ const deleteReview = async (req, res) => {
       ? res.status(404).send('No se encontro la devolución')
       : res.status(200).send('Se eliminó la devolución')
   } catch (error) {
-    return res.send(console.error(error)).status(400)
+    next(error)
   }
 }
 
