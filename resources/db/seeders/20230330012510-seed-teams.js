@@ -6,7 +6,10 @@ module.exports = {
     const date = new Date()
     await queryInterface.bulkInsert(
       'teams',
-      [{ name: 'Equipo 1', createdAt: date, updatedAt: date }],
+      [
+        { name: 'Comercial', createdAt: date, updatedAt: date },
+        { name: 'Sistemas', createdAt: date, updatedAt: date },
+      ],
       {}
     )
   },

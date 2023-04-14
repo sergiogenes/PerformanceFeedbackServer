@@ -22,9 +22,6 @@ module.exports = {
           updatedAt: date,
           createdAt: date,
           positionId: 1,
-          officeId: 1,
-          categoryId: 1,
-          teamId: 1,
         },
         {
           isAdmin: false,
