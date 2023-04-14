@@ -7,8 +7,17 @@
     "node": ">=18"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "prepare": "husky install"
+    "test": "NODE_ENV=test mocha --ui tdd --recursive test",
+    "start": "node index.js",
+    "start:dev": "nodemon index.js",
+    "prepare": "husky install",
+    "sequelize": "node_modules/.bin/sequelize",
+    "db:create": "sequelize db:create",
+    "db:drop": "sequelize db:drop",
+    "db:migrate": "sequelize db:migrate",
+    "db:migrate:undo": "sequelize db:migrate:undo",
+    "db:seed:all": "sequelize db:seed:all",
+    "db:seed:undo:all": "sequelize db:seed:undo:all"
   },
   "keywords": [],
   "author": "",
@@ -21,23 +30,26 @@
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.0",
     "pg": "^8.10.0",
-    "sequelize": "^6.29.3",
+    "sequelize": "^6.30.0",
     "volleyball": "^1.5.1"
   },
   "devDependencies": {
-    "eslint": "^8.36.0",
+    "eslint": "^8.37.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.27.5",
-    "eslint-plugin-n": "^15.6.1",
+    "eslint-plugin-n": "^15.7.0",
     "eslint-plugin-promise": "^6.1.1",
-    "husky": "^8.0.0",
+    "husky": "^8.0.3",
     "lint-staged": "^13.2.0",
-    "nodemon": "^2.0.21",
-    "prettier": "^2.8.6"
+    "mocha": "^10.2.0",
+    "nodemon": "^2.0.22",
+    "prettier": "^2.8.7",
+    "sequelize-cli": "^6.6.0",
+    "supertest": "^6.3.3"
   },
   "lint-staged": {
-    "*.js": "eslint --cache --fix",
+    "*.js": "eslint --cache --fix --cache-location ./node_modules/.cache/",
     "*.{js,css,md}": "prettier --write"
   }
 }

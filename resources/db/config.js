@@ -17,7 +17,7 @@ const config = {
   test: {
     username: process.env.CI_PD_USERNAME,
     password: process.env.CI_PD_PASSWORD,
-    database: process.env.CI_PD_NAME,
+    database: process.env.CI_PD_NAME || 'pd_test',
     host,
     dialect,
     logging,
