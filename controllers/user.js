@@ -1,3 +1,5 @@
+const { generateToken } = require('../utils/token')
+
 const { ValidationError } = require('sequelize')
 const {
   User,
@@ -207,6 +209,32 @@ const modifyUser = async (req, res, next) => {
   }
 }
 
+const userMeEdit = async (req, res, next) => {
+  let user, affected, resulting, payload, token
+  const { password, previousPass } = req.body
+  const userFind = await User.findByPk(req.user.id)
+  const isPasswordValid = await userFind.hasPassword(previousPass)
+  if (!isPasswordValid) {
+    const error = new Error('La contraseña anterior no coincide')
+    error.status = 401
+    return res.status(error.status).send(error.message)
+  } else {
+    try {
+      user = await User.findOne({ where: { email: req.user.email } })
+      ;[affected, resulting] = await User.update(
+        { password },
+        { where: { email: user.email }, returning: true, individualHooks: true }
+      )
+      const { id, name, lastName, email, isAdmin } = resulting[0]
+      payload = { id, name, lastName, email, isAdmin }
+      token = await generateToken(payload)
+    } catch (error) {
+      return res.send(error).status(400)
+    }
+    return res.cookie('token', token).send(payload)
+  }
+}
+
 const deactivateUser = async (req, res, next) => {
   try {
     await User.update(
@@ -218,6 +246,15 @@ const deactivateUser = async (req, res, next) => {
     next(error)
   }
 }
+const getUserCountPositions = async (req, res) => {
+  const getUsers = await User.findAll({
+    attributes: ['positionId', [Sequelize.fn('COUNT', 'positionId'), 'count']],
+    include: [{ model: Position, as: 'position', attributes: ['name'] }],
+    group: ['positionId', 'position.id'],
+  })
+
+  res.send(getUsers)
+}
 
 module.exports = {
   allUser,
@@ -228,4 +265,6 @@ module.exports = {
   deactivateUser,
   allEmpleados,
   getAllUsersDesactivated,
+  userMeEdit,
+  getUserCountPositions,
 }

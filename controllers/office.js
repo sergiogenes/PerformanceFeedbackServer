@@ -22,7 +22,23 @@ const getOffices = async (req, res, next) => {
   }
 }
 
-const createOffice = async (req, res, next) => {
+const getCountOffices = async (req, res) => {
+try {
+  const getOffices = await Office.findAll({
+    attributes: ['countryId', [Sequelize.fn('COUNT', 'countryId'), 'count']],
+    include: [
+      { model: Country, as: 'country', attributes: ['id', 'ISO', 'name'] },
+    ],
+    group: ['countryId', 'country.id'],
+  })
+
+  res.send(getOffices)
+  } catch(error) {
+  next(error)
+  }
+}
+
+const createOffice = async (req, res) => {
   const { name, countryId } = req.body
 
   if (!name) {
@@ -110,4 +126,5 @@ module.exports = {
   createOffice,
   updateOffice,
   deleteOffice,
+  getCountOffices,
 }
