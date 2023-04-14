@@ -15,26 +15,45 @@ const {
 const allUser = async (req, res, next) => {
   let user
 
-  const token = req.cookies.token;
-    const { id } = verifyToken(token)
+  const token = req.cookies.token
+  const { id, isAdmin } = verifyToken(token)
 
   try {
-    user = await User.findAll({
-      where: {
-        deactivated_at: null,
-        id: {
-          [Sequelize.Op.not]: id,
+    if (isAdmin) {
+      user = await User.findAll({
+        where: {
+          deactivated_at: null,
+          id: {
+            [Sequelize.Op.not]: id,
+          },
         },
-      },
-      include: [
-        { model: Position, as: 'position' },
-        { model: Team, as: 'team' },
-        { model: Category, as: 'category' },
-        { model: Office, as: 'office' },
-        { model: User, as: 'leader' },
-      ],
-      order: [['id', 'ASC']],
-    })
+        include: [
+          { model: Position, as: 'position' },
+          { model: Team, as: 'team' },
+          { model: Category, as: 'category' },
+          { model: Office, as: 'office' },
+          { model: User, as: 'leader' },
+        ],
+        order: [['id', 'ASC']],
+      })
+    } else {
+      user = await User.findAll({
+        where: {
+          deactivated_at: null,
+          isAdmin: {
+            [Sequelize.Op.not]: true,
+          },
+        },
+        include: [
+          { model: Position, as: 'position' },
+          { model: Team, as: 'team' },
+          { model: Category, as: 'category' },
+          { model: Office, as: 'office' },
+          { model: User, as: 'leader' },
+        ],
+        order: [['id', 'ASC']],
+      })
+    }
   } catch (error) {
     return res.send(console.error(error)).status(400)
   }
@@ -67,8 +86,8 @@ const allEmpleados = async (req, res, next) => {
 }
 
 const getAllUsersDesactivated = async (req, res, next) => {
-  const token = req.cookies.token;
-    const { id } = verifyToken(token)
+  const token = req.cookies.token
+  const { id } = verifyToken(token)
 
   const getUserDesactivated = await User.findAll({
     attributes: [
@@ -124,25 +143,43 @@ const getAllUsersDesactivated = async (req, res, next) => {
 const includeDeactivated = async (req, res, next) => {
   let user
 
-  const token = req.cookies.token;
-    const { id } = verifyToken(token)
+  const token = req.cookies.token
+  const { id, isAdmin } = verifyToken(token)
 
   try {
-    user = await User.findAll({
-      where: {
-        id: {
-          [Sequelize.Op.not]: id,
+    if (isAdmin) {
+      user = await User.findAll({
+        where: {
+          id: {
+            [Sequelize.Op.not]: id,
+          },
         },
-      },
-      include: [
-        { model: Position, as: 'position' },
-        { model: Team, as: 'team' },
-        { model: Category, as: 'category' },
-        { model: Office, as: 'office' },
-        { model: User, as: 'leader' },
-      ],
-      order: [['id', 'ASC']],
-    })
+        include: [
+          { model: Position, as: 'position' },
+          { model: Team, as: 'team' },
+          { model: Category, as: 'category' },
+          { model: Office, as: 'office' },
+          { model: User, as: 'leader' },
+        ],
+        order: [['id', 'ASC']],
+      })
+    } else {
+      user = await User.findAll({
+        where: {
+          isAdmin: {
+            [Sequelize.Op.not]: true,
+          },
+        },
+        include: [
+          { model: Position, as: 'position' },
+          { model: Team, as: 'team' },
+          { model: Category, as: 'category' },
+          { model: Office, as: 'office' },
+          { model: User, as: 'leader' },
+        ],
+        order: [['id', 'ASC']],
+      })
+    }
   } catch (error) {
     return res.send(console.error(error)).status(400)
   }
