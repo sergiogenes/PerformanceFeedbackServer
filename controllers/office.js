@@ -6,7 +6,7 @@ const errorOficeNotFound = 'Oficina no encontrada'
 const errorOfficeAlReadyExist = 'La oficina ya existe'
 const errorCountryNotExist = 'El país ingresado no existe'
 
-const getOffices = async (req, res) => {
+const getOffices = async (req, res, next) => {
   try {
     const offices = await Office.findAll({
       include: { model: Country, as: 'country' },
@@ -18,11 +18,12 @@ const getOffices = async (req, res) => {
     }
     return res.status(200).send(offices)
   } catch (error) {
-    return res.send(console.error(error)).status(400)
+    next(error)
   }
 }
 
 const getCountOffices = async (req, res) => {
+try {
   const getOffices = await Office.findAll({
     attributes: ['countryId', [Sequelize.fn('COUNT', 'countryId'), 'count']],
     include: [
@@ -32,6 +33,9 @@ const getCountOffices = async (req, res) => {
   })
 
   res.send(getOffices)
+  } catch(error) {
+  next(error)
+  }
 }
 
 const createOffice = async (req, res) => {
@@ -61,11 +65,11 @@ const createOffice = async (req, res) => {
       return res.status(201).send(officeValidate)
     }
   } catch (error) {
-    return res.send(console.error(error)).status(400)
+    next(error)
   }
 }
 
-const updateOffice = async (req, res) => {
+const updateOffice = async (req, res, next) => {
   const { name, countryId } = req.body
   const { id } = req.params
 
@@ -98,11 +102,11 @@ const updateOffice = async (req, res) => {
         : res.status(400).send('La oficina no se actualizo')
     }
   } catch (error) {
-    return res.send(console.error(error)).status(400)
+    next(error)
   }
 }
 
-const deleteOffice = async (req, res) => {
+const deleteOffice = async (req, res, next) => {
   const { id } = req.params
 
   if (!id) return res.status(400).send('Campos vacíos')
@@ -113,7 +117,7 @@ const deleteOffice = async (req, res) => {
       ? res.status(404).send('No se encontró la oficina')
       : res.status(200).send('La oficina fue eliminada correctamente')
   } catch (error) {
-    return res.send(console.error(error)).status(400)
+    next(error)
   }
 }
 

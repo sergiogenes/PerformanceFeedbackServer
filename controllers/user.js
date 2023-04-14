@@ -1,6 +1,6 @@
 const { generateToken } = require('../utils/token')
 const { verifyToken } = require('../utils/token')
-
+const { generateString } = require('../utils/randomString')
 const { ValidationError } = require('sequelize')
 const {
   User,
@@ -55,20 +55,19 @@ const allUser = async (req, res, next) => {
       })
     }
   } catch (error) {
-    return res.send(console.error(error)).status(400)
+    next(error)
   }
-
   return res.send(user)
 }
 
 const allEmpleados = async (req, res, next) => {
-  let user
-
   try {
     user = await User.findAll({
       where: {
         leaderId: req.params.id,
       },
+    const user = await User.findAll({
+      where: { leaderId: req.params.id },
       include: [
         { model: Position, as: 'position' },
         { model: Team, as: 'team' },
@@ -78,11 +77,10 @@ const allEmpleados = async (req, res, next) => {
       ],
       order: [['id', 'ASC']],
     })
+    res.send(user)
   } catch (error) {
-    return res.send(console.error(error)).status(400)
+    next(error)
   }
-
-  return res.send(user)
 }
 
 const getAllUsersDesactivated = async (req, res, next) => {
@@ -109,35 +107,37 @@ const getAllUsersDesactivated = async (req, res, next) => {
         [Sequelize.Op.not]: id,
       },
     },
-    include: [
-      { model: Position, as: 'position', attributes: ['id', 'name'] },
-      { model: Team, as: 'team', attributes: ['id', 'name'] },
-      {
-        model: Category,
-        as: 'category',
-        attributes: ['id', 'name', 'competence', 'function'],
-      },
-      { model: Office, as: 'office', attributes: ['id', 'name'] },
-      {
-        model: User,
-        as: 'leader',
-        attributes: [
-          'id',
-          'firstName',
-          'lastName',
-          'email',
-          'image',
-          'fileNumber',
-          'isAdmin',
-          'deactivated_at',
-          'shift',
-        ],
-      },
-    ],
-    order: [['id', 'ASC']],
-  })
-
-  res.status(200).send(getUserDesactivated)
+      include: [
+        { model: Position, as: 'position', attributes: ['id', 'name'] },
+        { model: Team, as: 'team', attributes: ['id', 'name'] },
+        {
+          model: Category,
+          as: 'category',
+          attributes: ['id', 'name', 'competence', 'function'],
+        },
+        { model: Office, as: 'office', attributes: ['id', 'name'] },
+        {
+          model: User,
+          as: 'leader',
+          attributes: [
+            'id',
+            'firstName',
+            'lastName',
+            'email',
+            'image',
+            'fileNumber',
+            'isAdmin',
+            'deactivated_at',
+            'shift',
+          ],
+        },
+      ],
+      order: [['id', 'ASC']],
+    })
+    res.status(200).send(getUserDesactivated)
+  } catch (error) {
+    next(error)
+  }
 }
 
 const includeDeactivated = async (req, res, next) => {
@@ -181,18 +181,15 @@ const includeDeactivated = async (req, res, next) => {
       })
     }
   } catch (error) {
-    return res.send(console.error(error)).status(400)
+    next(error)
   }
-
   return res.send(user)
 }
 
 const oneUser = async (req, res, next) => {
   const { id } = req.params
-  let user
-
   try {
-    user = await User.findByPk(id, {
+    const user = await User.findByPk(id, {
       include: [
         { model: Position, as: 'position' },
         { model: Team, as: 'team' },
@@ -202,11 +199,10 @@ const oneUser = async (req, res, next) => {
         { model: Review, as: 'evaluated' },
       ],
     })
+    res.send(user)
   } catch (error) {
-    return res.send(console.error(error)).status(400)
+    next(error)
   }
-
-  return res.send(user)
 }
 
 const createUser = async (req, res, next) => {
@@ -245,7 +241,6 @@ const createUser = async (req, res, next) => {
     res.status(201).send(user)
   } catch (error) {
     if (error instanceof ValidationError) error.status = 422
-    console.error(error)
     next(error)
   }
 }
@@ -253,7 +248,7 @@ const createUser = async (req, res, next) => {
 const modifyUser = async (req, res, next) => {
   const { leader, position, team, category, office, ...userFields } = req.body
 
-  let user, positionToSet, teamToSet, categoryToSet, officeToSet, leaderToSet
+  let positionToSet, teamToSet, categoryToSet, officeToSet, leaderToSet
 
   if (position) positionToSet = await Position.findByPk(position)
   if (team) teamToSet = await Team.findByPk(team)
@@ -263,7 +258,7 @@ const modifyUser = async (req, res, next) => {
     leaderToSet = await User.findOne({ where: { fileNumber: leader } })
 
   try {
-    user = await User.findByPk(req.params.id)
+    const user = await User.findByPk(req.params.id)
     user.update({ ...userFields }, { returning: true })
     if (positionToSet) await user.setPosition(positionToSet)
     if (teamToSet) {
@@ -277,7 +272,7 @@ const modifyUser = async (req, res, next) => {
 
     res.send(user)
   } catch (error) {
-    return res.send(console.error(error)).status(400)
+    next(error)
   }
 }
 
@@ -309,15 +304,30 @@ const userMeEdit = async (req, res, next) => {
 
 const deactivateUser = async (req, res, next) => {
   try {
-    await User.update(
-      { deactivated_at: new Date() },
-      { where: { id: req.params.id }, returning: true, individualHooks: true }
-    )
+    const user = await User.findByPk(req.params.id, {
+      include: [{ model: User, as: 'led' }],
+    })
+
+    if (user.led[0]) {
+      return res
+        .status(403)
+        .send('No puede desactivar un usuario que tiene empleados a cargo')
+    }
+
+    user.categoryId = null
+    user.positionId = null
+    user.teamId = null
+    user.leaderId = null
+    user.officeId = null
+    user.deactivated_at = new Date()
+    user.password = generateString(8)
+
     res.sendStatus(204)
   } catch (error) {
     return res.send(console.error(error)).status(400)
   }
 }
+
 const getUserCountPositions = async (req, res) => {
   const getUsers = await User.findAll({
     attributes: ['positionId', [Sequelize.fn('COUNT', 'positionId'), 'count']],

@@ -8,7 +8,7 @@ module.exports = {
       'categories',
       [
         {
-          name: 'Categoría 1',
+          name: 'Comercial-Junior',
           competence:
             'Esta es el campo donde van las competencias de esta categoría.',
           function: 'La función de esta categoría es funcionar.',
@@ -16,7 +16,7 @@ module.exports = {
           updatedAt: date,
         },
         {
-          name: 'Categoría 2',
+          name: 'Comercial-Semi Senior',
           competence:
             'Esta es el campo donde van las competencias de esta categoría.',
           function: 'La función de esta categoría es funcionar.',
@@ -24,7 +24,31 @@ module.exports = {
           updatedAt: date,
         },
         {
-          name: 'Categoría 3',
+          name: 'Comercial-Senior',
+          competence:
+            'Esta es el campo donde van las competencias de esta categoría.',
+          function: 'La función de esta categoría es funcionar.',
+          createdAt: date,
+          updatedAt: date,
+        },
+        {
+          name: 'Sistemas-Junior',
+          competence:
+            'Esta es el campo donde van las competencias de esta categoría.',
+          function: 'La función de esta categoría es funcionar.',
+          createdAt: date,
+          updatedAt: date,
+        },
+        {
+          name: 'Sistemas-Semi Senior',
+          competence:
+            'Esta es el campo donde van las competencias de esta categoría.',
+          function: 'La función de esta categoría es funcionar.',
+          createdAt: date,
+          updatedAt: date,
+        },
+        {
+          name: 'Sistemas-Senior',
           competence:
             'Esta es el campo donde van las competencias de esta categoría.',
           function: 'La función de esta categoría es funcionar.',
