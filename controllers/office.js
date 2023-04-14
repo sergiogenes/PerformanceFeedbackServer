@@ -1,10 +1,10 @@
 const { Office, Country, Sequelize } = require('../models')
-const errorInvalidCharacters = 'Caracteres no validos';
-  const errorEmptyOfficeName = 'Nombre de oficina vacio';
-  const errorTooManyCharacters = 'El nombre tiene muchos caracteres';
-  const errorOficeNotFound = 'Oficina no encontrada';
-  const errorOfficeAlReadyExist = 'La oficina ya existe';
-  const errorCountryNotExist = 'El país ingresado no existe'
+const errorInvalidCharacters = 'Caracteres no validos'
+const errorEmptyOfficeName = 'Nombre de oficina vacio'
+const errorTooManyCharacters = 'El nombre tiene muchos caracteres'
+const errorOficeNotFound = 'Oficina no encontrada'
+const errorOfficeAlReadyExist = 'La oficina ya existe'
+const errorCountryNotExist = 'El país ingresado no existe'
 
 const getOffices = async (req, res) => {
   try {
@@ -20,6 +20,18 @@ const getOffices = async (req, res) => {
   } catch (error) {
     return res.send(console.error(error)).status(400)
   }
+}
+
+const getCountOffices = async (req, res) => {
+  const getOffices = await Office.findAll({
+    attributes: ['countryId', [Sequelize.fn('COUNT', 'countryId'), 'count']],
+    include: [
+      { model: Country, as: 'country', attributes: ['id', 'ISO', 'name'] },
+    ],
+    group: ['countryId', 'country.id'],
+  })
+
+  res.send(getOffices)
 }
 
 const createOffice = async (req, res) => {
@@ -110,4 +122,5 @@ module.exports = {
   createOffice,
   updateOffice,
   deleteOffice,
+  getCountOffices,
 }
