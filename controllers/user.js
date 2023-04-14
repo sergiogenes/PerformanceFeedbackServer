@@ -222,9 +222,10 @@ const modifyUser = async (req, res, next) => {
 const userMeEdit = async (req, res, next) => {
   let user, affected, resulting, payload, token
   const { password, previousPass } = req.body
-  console.log('imprimo pass y previous', password, 'previos', previousPass)
-  if (req.user.password !== previousPass) {
-    const error = new Error('La Contraseña Anterior No Coincide')
+  const userFind = await User.findByPk(req.user.id)
+  const isPasswordValid = await userFind.hasPassword(previousPass)
+  if (!isPasswordValid) {
+    const error = new Error('La contraseña anterior no coincide')
     error.status = 401
     return res.status(error.status).send(error.message)
   } else {
