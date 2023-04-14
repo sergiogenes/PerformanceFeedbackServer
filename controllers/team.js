@@ -7,7 +7,7 @@ const allTeam = async (req, res, next) => {
       include: [
         {
           model: User,
-          // TODO: Volver a incluir el where o utilizar scope
+          // TODO: Volver a filtrar con where o mejor implementar `findAllActive`
           include: [
             { model: Position, as: 'position' },
             { model: Category, as: 'category' },
@@ -18,7 +18,7 @@ const allTeam = async (req, res, next) => {
     })
     res.send(teams)
   } catch (error) {
-    return res.send(console.error(error)).status(400)
+    next(error)
   }
 }
 
@@ -37,7 +37,7 @@ const oneTeam = async (req, res, next) => {
     })
     res.send(team)
   } catch (error) {
-    return res.send(console.error(error)).status(400)
+    next(error)
   }
 }
 
@@ -56,8 +56,7 @@ const createTeam = async (req, res, next) => {
     }
   } catch (error) {
     if (error instanceof ValidationError) error.status = 422
-    console.error(error)
-    return next(error)
+    next(error)
   }
 }
 
@@ -71,7 +70,7 @@ const modifyTeam = async (req, res, next) => {
     )
     res.send(team)
   } catch (error) {
-    return res.send(console.error(error)).status(400)
+    next(error)
   }
 }
 
@@ -80,7 +79,7 @@ const deleteTeam = async (req, res, next) => {
     await Team.destroy({ where: { id: req.params.id } })
     res.sendStatus(204)
   } catch (error) {
-    return res.send(console.error(error)).status(400)
+    next(error)
   }
 }
 
