@@ -185,7 +185,7 @@ const modifyUser = async (req, res, next) => {
 
   if (position) positionToSet = await Position.findByPk(position)
   if (team) teamToSet = await Team.findByPk(team)
-  if (category) categoryToSet = await Category.findByPk(team)
+  if (category) categoryToSet = await Category.findByPk(category)
   if (office) officeToSet = await Office.findByPk(office)
   if (leader)
     leaderToSet = await User.findOne({ where: { fileNumber: leader } })
@@ -254,7 +254,7 @@ const deactivateUser = async (req, res, next) => {
     user.officeId = null
     user.deactivated_at = new Date()
     user.password = generateString(8)
-
+    user.save()
     res.sendStatus(204)
   } catch (error) {
     return res.send(console.error(error)).status(400)
