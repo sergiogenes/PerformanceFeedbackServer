@@ -1,4 +1,5 @@
 const { generateToken } = require('../utils/token')
+const { verifyToken } = require('../utils/token')
 
 const { ValidationError } = require('sequelize')
 const {
@@ -14,9 +15,17 @@ const {
 const allUser = async (req, res, next) => {
   let user
 
+  const token = req.cookies.token;
+    const { id } = verifyToken(token)
+
   try {
     user = await User.findAll({
-      where: { deactivated_at: null },
+      where: {
+        deactivated_at: null,
+        id: {
+          [Sequelize.Op.not]: id,
+        },
+      },
       include: [
         { model: Position, as: 'position' },
         { model: Team, as: 'team' },
@@ -38,7 +47,9 @@ const allEmpleados = async (req, res, next) => {
 
   try {
     user = await User.findAll({
-      where: { leaderId: req.params.id },
+      where: {
+        leaderId: req.params.id,
+      },
       include: [
         { model: Position, as: 'position' },
         { model: Team, as: 'team' },
@@ -56,6 +67,9 @@ const allEmpleados = async (req, res, next) => {
 }
 
 const getAllUsersDesactivated = async (req, res, next) => {
+  const token = req.cookies.token;
+    const { id } = verifyToken(token)
+
   const getUserDesactivated = await User.findAll({
     attributes: [
       'id',
@@ -71,6 +85,9 @@ const getAllUsersDesactivated = async (req, res, next) => {
     where: {
       deactivated_at: {
         [Sequelize.Op.ne]: null,
+      },
+      id: {
+        [Sequelize.Op.not]: id,
       },
     },
     include: [
@@ -107,8 +124,16 @@ const getAllUsersDesactivated = async (req, res, next) => {
 const includeDeactivated = async (req, res, next) => {
   let user
 
+  const token = req.cookies.token;
+    const { id } = verifyToken(token)
+
   try {
     user = await User.findAll({
+      where: {
+        id: {
+          [Sequelize.Op.not]: id,
+        },
+      },
       include: [
         { model: Position, as: 'position' },
         { model: Team, as: 'team' },

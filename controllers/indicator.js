@@ -39,7 +39,6 @@ const allIndicatorCategory = async (req, res, next) => {
 const createIndicator = async (req, res, next) => {
   try {
     const { category, description, goal } = req.body
-    console.log(category)
 
     const categoryToSet = await Category.findOne({ where: { name: category } })
 
