@@ -4,6 +4,8 @@ const request = require('supertest')
 const createApp = require('../app')
 const db = require('../models')
 
+assert.isTrue = (actual, message) => assert.strictEqual(actual, true, message)
+
 const app = createApp()
 
 suite('User', () => {
@@ -58,7 +60,7 @@ suite('User', () => {
   test('The user with id 1 must be an administrator', async () => {
     const firstUser = await db.User.findByPk(1)
 
-    assert(firstUser.isRoot())
+    assert.isTrue(firstUser.isRoot())
   })
 
   test('The root user I.e. the original administrator with id 1, AKA "superadministrator" cannot be deactivated', async () => {
@@ -72,6 +74,6 @@ suite('User', () => {
     const root = await db.User.findByPk(1)
     root.isAdmin = false
 
-    assert.ok(root.isAdmin)
+    assert.isTrue(root.isAdmin)
   })
 })
