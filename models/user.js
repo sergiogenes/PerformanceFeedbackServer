@@ -158,6 +158,10 @@ module.exports = (sequelize, DataTypes) => {
       return await foundClosure(foundUser)
     }
 
+    isAdministrator() {
+      return this.isAdmin
+    }
+
     isRoot() {
       return this.id === 1
     }

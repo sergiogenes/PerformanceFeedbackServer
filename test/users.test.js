@@ -74,6 +74,6 @@ suite('User', () => {
     const root = await db.User.findByPk(1)
     root.isAdmin = false
 
-    assert.isTrue(root.isAdmin)
+    assert.isTrue(root.isAdministrator())
   })
 })
