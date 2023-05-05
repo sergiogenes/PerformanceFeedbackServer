@@ -43,12 +43,17 @@ suite('User', () => {
     assert.deepEqual(response.statusCode, 401)
   })
 
+  // TODO fix this. It is not testing what it claims. It should exercise
+  // logging in with a non-administrative account before attempting to
+  // create a user.
   test('Cannot create new users if not an administrator', async () => {
     const response = await request(app).post('/users')
 
     assert.deepEqual(response.statusCode, 401)
   })
 
+  // TODO fix this. It is not testing what it claims. It should exercise
+  // creating a user, only after logging in with an administrative acount.
   test('Can create new users only if an administrator', async () => {
     const response = await request(app)
       .post('/auth/login')
