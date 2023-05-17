@@ -1,30 +1,22 @@
 'use strict'
-const { Model } = require('sequelize')
+const { Model, DataTypes } = require('sequelize')
+const db = require('../db')
 
-module.exports = (sequelize, DataTypes) => {
-  class Indicator extends Model {
-    static associate(models) {
-      Indicator.belongsTo(models.Category, {
-        as: 'category',
-        foreignKey: 'categoryId',
-      })
-    }
-  }
-  Indicator.init(
-    {
-      description: {
-        type: DataTypes.TEXT,
-        // allowNull: false,
-      },
-      goal: {
-        type: DataTypes.INTEGER,
-        // allowNull: false,
-      },
+class Indicator extends Model {}
+Indicator.init(
+  {
+    description: {
+      type: DataTypes.TEXT,
+      // allowNull: false,
     },
-    {
-      sequelize,
-      tableName: 'indicators',
-    }
-  )
-  return Indicator
-}
+    goal: {
+      type: DataTypes.INTEGER,
+      // allowNull: false,
+    },
+  },
+  {
+    sequelize: db,
+    modelName: 'indicators',
+  }
+)
+module.exports = Indicator

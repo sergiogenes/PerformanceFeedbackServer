@@ -14,7 +14,7 @@ const {
 } = require('../controllers/user')
 const { validateAuth, validateAdmin } = require('../middleware/auth')
 
-router.get('/', validateAuth, allUser)
+router.get('/', allUser)
 router.get('/all', validateAuth, includeDeactivated)
 router.get('/disabled', validateAuth, getAllUsersDesactivated)
 router.get('/counts', validateAuth, getUserCountPositions)

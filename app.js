@@ -4,6 +4,7 @@ const express = require('express')
 const volleyball = require('volleyball')
 const cookieParser = require('cookie-parser')
 const cors = require('cors')
+const { User } = require('./models')
 
 const routes = require('./routes')
 
@@ -21,7 +22,9 @@ const createApp = () => {
 
   app.use('/', routes)
 
-  app.use('/', (req, res) => res.sendStatus(404))
+  app.use('/', (req, res) => {
+    res.send('Wellcome a Backend of Feedback Performance!')
+  })
 
   app.use((err, req, res, next) => {
     res.locals.message = err.message

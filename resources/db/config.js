@@ -1,9 +1,9 @@
-const username = process.env.DEV_PD_USERNAME || null
-const password = process.env.DEV_PD_PASSWORD || null
-const host = process.env.DEV_PD_HOSTNAME || 'localhost'
+const username = process.env.DEV_PD_USERNAME
+const password = process.env.DEV_PD_PASSWORD
+const host = process.env.DEV_PD_HOSTNAME
 const dialect = 'postgres'
-const database = process.env.DEV_PD_NAME || 'pd_dev'
-const logging = process.env.DEV_PD_LOGGING || false
+const database = process.env.DEV_PD_NAME
+const logging = process.env.DEV_PD_LOGGING
 
 const config = {
   development: {

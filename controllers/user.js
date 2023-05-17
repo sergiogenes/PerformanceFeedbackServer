@@ -17,13 +17,13 @@ const allUser = async (req, res, next) => {
   try {
     user = await User.findAll({
       where: { deactivated_at: null },
-      include: [
+      /* include: [
         { model: Position, as: 'position' },
         { model: Team, as: 'team' },
         { model: Category, as: 'category' },
         { model: Office, as: 'office' },
         { model: User, as: 'leader' },
-      ],
+      ], */
       order: [['id', 'ASC']],
     })
   } catch (error) {

@@ -1,22 +1,20 @@
 'use strict'
-const { Model } = require('sequelize')
-module.exports = (sequelize, DataTypes) => {
-  class Team extends Model {
-    static associate(models) {
-      Team.hasMany(models.User, { foreignKey: 'teamId' })
-    }
-  }
-  Team.init(
-    {
-      name: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
+const { Model, DataTypes } = require('sequelize')
+const db = require('../db')
+
+class Team extends Model {}
+
+Team.init(
+  {
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
-    {
-      sequelize,
-      tableName: 'teams',
-    }
-  )
-  return Team
-}
+  },
+  {
+    sequelize: db,
+    modelName: 'teams',
+  }
+)
+
+module.exports = Team

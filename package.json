@@ -9,7 +9,7 @@
   "scripts": {
     "test": "NODE_ENV=test mocha --ui tdd --recursive test",
     "start": "node index.js",
-    "start:dev": "nodemon index.js",
+    "dev": "nodemon index.js",
     "prepare": "husky install",
     "sequelize": "node_modules/.bin/sequelize",
     "db:create": "sequelize db:create",
