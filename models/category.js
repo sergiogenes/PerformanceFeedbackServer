@@ -1,36 +1,27 @@
 'use strict'
-const { Model } = require('sequelize')
+const { Model, DataTypes } = require('sequelize')
+const db = require('../db')
 
-module.exports = (sequelize, DataTypes) => {
-  class Category extends Model {
-    static associate(models) {
-      Category.hasMany(models.Indicator, {
-        as: 'category',
-        foreignKey: 'categoryId',
-      })
-      Category.hasMany(models.User, { foreignKey: 'categoryId' })
-    }
-  }
+class Category extends Model {}
 
-  Category.init(
-    {
-      name: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      competence: {
-        type: DataTypes.TEXT,
-        allowNull: false,
-      },
-      function: {
-        type: DataTypes.TEXT,
-        allowNull: false,
-      },
+Category.init(
+  {
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
-    {
-      sequelize,
-      tableName: 'categories',
-    }
-  )
-  return Category
-}
+    competence: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
+    function: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
+  },
+  {
+    sequelize: db,
+    modelName: 'categories',
+  }
+)
+module.exports = Category

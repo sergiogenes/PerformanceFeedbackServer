@@ -1,51 +1,55 @@
-'use strict'
+const User = require('./user')
+const Team = require('./team')
+const Review = require('./review')
+const Position = require('./position')
+const Office = require('./office')
+const Indicator = require('./indicator')
+const Country = require('./country')
+const Category = require('./category')
 
-const fs = require('fs')
-const path = require('path')
-const Sequelize = require('sequelize')
-const process = require('process')
-const basename = path.basename(__filename)
-const env = process.env.NODE_ENV || 'development'
-// eslint-disable-next-line
-const config = require(__dirname + '/../resources/db/config.js')[env]
-const db = {}
+// Relation Leader - Led
+User.hasMany(User, { as: 'led', foreignKey: 'leaderId' })
+User.belongsTo(User, { as: 'leader', foreignKey: 'leaderId' })
 
-let sequelize
-if (config.use_env_variable) {
-  sequelize = new Sequelize(process.env[config.use_env_variable], config)
-} else {
-  sequelize = new Sequelize(
-    config.database,
-    config.username,
-    config.password,
-    config
-  )
+// Relation User - Team
+User.belongsTo(Team, { as: 'team', foreignKey: 'teamId' })
+Team.hasMany(User, { foreignKey: 'teamId' })
+
+// Relation User - Review | Evaluator
+User.hasMany(Review, { as: 'evaluator', foreignKey: 'evaluatorId' })
+Review.belongsTo(User, { as: 'evaluator', foreignKey: 'evaluatorId' })
+
+// Relation User - Review | Evaluated
+User.hasMany(Review, { as: 'evaluated', foreignKey: 'evaluatedId' })
+Review.belongsTo(User, { as: 'evaluated', foreignKey: 'evaluatedId' })
+
+// Relation User - Position
+User.belongsTo(Position, { as: 'position', foreignKey: 'positionId' })
+Position.hasMany(User, { as: 'user', foreignKey: 'positionId' })
+
+// Relation User - Office
+User.belongsTo(Office, { as: 'office', foreignKey: 'officeId' })
+Office.hasMany(User, { foreignKey: 'officeId' })
+
+// Relation Office - Country
+Office.belongsTo(Country, { as: 'country', foreignKey: 'countryId' })
+Country.hasMany(Office, { foreignKey: 'countryId' })
+
+// Relation User - Category
+User.belongsTo(Category, { as: 'category', foreignKey: 'categoryId' })
+Category.hasMany(User, { foreignKey: 'categoryId' })
+
+// Relation Category - Indicator
+Category.hasMany(Indicator, { as: 'category', foreignKey: 'categoryId' })
+Indicator.belongsTo(Category, { as: 'category', foreignKey: 'categoryId' })
+
+module.exports = {
+  User,
+  Team,
+  Review,
+  Position,
+  Office,
+  Indicator,
+  Country,
+  Category,
 }
-
-fs.readdirSync(__dirname)
-  .filter(file => {
-    return (
-      file.indexOf('.') !== 0 &&
-      file !== basename &&
-      file.slice(-3) === '.js' &&
-      file.indexOf('.test.js') === -1
-    )
-  })
-  .forEach(file => {
-    const model = require(path.join(__dirname, file))(
-      sequelize,
-      Sequelize.DataTypes
-    )
-    db[model.name] = model
-  })
-
-Object.keys(db).forEach(modelName => {
-  if (db[modelName].associate) {
-    db[modelName].associate(db)
-  }
-})
-
-db.sequelize = sequelize
-db.Sequelize = Sequelize
-
-module.exports = db
