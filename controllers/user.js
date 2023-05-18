@@ -257,13 +257,20 @@ const deactivateUser = async (req, res, next) => {
   }
 }
 const getUserCountPositions = async (req, res) => {
-  const getUsers = await User.findAll({
-    attributes: ['positionId', [Sequelize.fn('COUNT', 'positionId'), 'count']],
-    include: [{ model: Position, as: 'position', attributes: ['name'] }],
-    group: ['positionId', 'position.id'],
-  })
+  try {
+    const getUsers = await User.findAll({
+      attributes: [
+        'positionId',
+        [Sequelize.fn('COUNT', 'positionId'), 'count'],
+      ],
+      include: [{ model: Position, as: 'position', attributes: ['name'] }],
+      group: ['positionId', 'position.id'],
+    })
 
-  res.send(getUsers)
+    res.send(getUsers)
+  } catch (error) {
+    return res.send(console.error(error)).status(400)
+  }
 }
 
 module.exports = {
