@@ -2,6 +2,7 @@ const Sequelize = require('sequelize')
 const { ValidationError } = require('sequelize')
 const { generateToken } = require('../utils/token')
 const { User, Position, Team, Category, Office, Review } = require('../models')
+const { generateString } = require('../utils/randomString')
 
 const allUser = async (req, res, next) => {
   let user
@@ -244,15 +245,30 @@ const userMeEdit = async (req, res, next) => {
 
 const deactivateUser = async (req, res, next) => {
   try {
-    await User.update(
-      { deactivated_at: new Date() },
-      { where: { id: req.params.id }, returning: true, individualHooks: true }
-    )
+    const user = await User.findByPk(req.params.id, {
+      include: [{ model: User, as: 'led' }],
+    })
+
+    if (user.led[0]) {
+      return res
+        .status(403)
+        .send('No puede desactivar un usuario que tiene empleados a cargo')
+    }
+
+    user.categoryId = null
+    user.positionId = null
+    user.teamId = null
+    user.leaderId = null
+    user.officeId = null
+    user.deactivated_at = new Date()
+    user.password = generateString(8)
+    user.save()
     res.sendStatus(204)
   } catch (error) {
     return res.send(console.error(error)).status(400)
   }
 }
+
 const getUserCountPositions = async (req, res) => {
   try {
     const getUsers = await User.findAll({
