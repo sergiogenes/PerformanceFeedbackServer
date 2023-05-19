@@ -272,6 +272,7 @@ const deactivateUser = async (req, res, next) => {
 const getUserCountPositions = async (req, res) => {
   try {
     const getUsers = await User.findAll({
+      where: { deactivated_at: null, isAdmin: false },
       attributes: [
         'positionId',
         [Sequelize.fn('COUNT', 'positionId'), 'count'],
