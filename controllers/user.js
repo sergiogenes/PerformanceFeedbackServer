@@ -48,52 +48,57 @@ const allEmpleados = async (req, res, next) => {
 }
 
 const getAllUsersDesactivated = async (req, res, next) => {
-  const getUserDesactivated = await User.findAll({
-    attributes: [
-      'id',
-      'firstName',
-      'lastName',
-      'email',
-      'image',
-      'fileNumber',
-      'isAdmin',
-      'deactivated_at',
-      'shift',
-    ],
-    where: {
-      deactivated_at: {
-        [Sequelize.Op.ne]: null,
+  try {
+    const getUserDesactivated = await User.findAll({
+      attributes: [
+        'id',
+        'firstName',
+        'lastName',
+        'email',
+        'image',
+        'fileNumber',
+        'isAdmin',
+        'deactivated_at',
+        'shift',
+      ],
+      where: {
+        deactivated_at: {
+          [Sequelize.Op.ne]: null,
+        },
       },
-    },
-    include: [
-      { model: Position, as: 'position', attributes: ['id', 'name'] },
-      { model: Team, as: 'team', attributes: ['id', 'name'] },
-      {
-        model: Category,
-        as: 'category',
-        attributes: ['id', 'name', 'competence', 'function'],
-      },
-      { model: Office, as: 'office', attributes: ['id', 'name'] },
-      {
-        model: User,
-        as: 'leader',
-        attributes: [
-          'id',
-          'firstName',
-          'lastName',
-          'email',
-          'image',
-          'fileNumber',
-          'isAdmin',
-          'deactivated_at',
-          'shift',
-        ],
-      },
-    ],
-    order: [['id', 'ASC']],
-  })
+      include: [
+        { model: Position, as: 'position', attributes: ['id', 'name'] },
+        { model: Team, as: 'team', attributes: ['id', 'name'] },
+        {
+          model: Category,
+          as: 'category',
+          attributes: ['id', 'name', 'competence', 'function'],
+        },
+        { model: Office, as: 'office', attributes: ['id', 'name'] },
+        {
+          model: User,
+          as: 'leader',
+          attributes: [
+            'id',
+            'firstName',
+            'lastName',
+            'email',
+            'image',
+            'fileNumber',
+            'isAdmin',
+            'deactivated_at',
+            'shift',
+          ],
+        },
+      ],
+      order: [['id', 'ASC']],
+    })
 
-  res.status(200).send(getUserDesactivated)
+    res.status(200).send(getUserDesactivated)
+  } catch (error) {
+    console.error(error.message)
+    return res.status(400).send(error.message)
+  }
 }
 
 const includeDeactivated = async (req, res, next) => {
