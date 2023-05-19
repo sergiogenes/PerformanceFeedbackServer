@@ -9,7 +9,7 @@ const allUser = async (req, res, next) => {
 
   try {
     user = await User.findAll({
-      where: { deactivated_at: null },
+      where: { deactivated_at: null, isAdmin: false },
       include: [
         { model: Position, as: 'position' },
         { model: Team, as: 'team' },
